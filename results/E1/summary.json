@@ -1,0 +1,38 @@
+{
+  "experiment": "E1-v3 PPO Conditional Dynamic-Graph Rerouting",
+  "rl_algorithm": "PPO",
+  "training_timesteps": 100000,
+  "training_seed": 42,
+  "paired_seeds": 30,
+  "total_evaluation_runs": 60,
+  "open_success_rate": 1.0,
+  "blocked_success_rate": 1.0,
+  "primary_route_rate_when_open": 1.0,
+  "alternate_route_rate_when_primary_blocked": 1.0,
+  "paired_primary_to_alternate_switch_rate": 1.0,
+  "open_steps_mean_std": [
+    8.0,
+    0.0
+  ],
+  "blocked_steps_mean_std": [
+    8.0,
+    0.0
+  ],
+  "open_invalid_actions_mean_std": [
+    0.0,
+    0.0
+  ],
+  "blocked_invalid_actions_mean_std": [
+    0.0,
+    0.0
+  ],
+  "open_latency_ms_mean_std": [
+    1.663895000001503,
+    1.2191893833816172
+  ],
+  "blocked_latency_ms_mean_std": [
+    1.6380379167079202,
+    1.234806115770686
+  ],
+  "training_time_s": 898.8306744000001
+}
