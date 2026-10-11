@@ -4,7 +4,7 @@
 
 Reproducibility artifacts for the manuscript:
 
-**DRTT: Closing the Loop Between Dynamic Red Teaming and Forensic Intelligence for Adaptive Network Defense**
+**DRTT: Evidence-Grounded Causal Reconstruction Under Synthetic Network Distribution Shifts**
 
 Prepared for IEEE Network.
 
