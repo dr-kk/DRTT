@@ -1,0 +1,26 @@
+{
+  "experiment": "E5-C84",
+  "test_seeds": [
+    8401,
+    8402,
+    8403,
+    8404,
+    8405
+  ],
+  "alerts": 1800,
+  "edge_budget": 400,
+  "all_predictions_and_scores_invariant": true,
+  "method": "Frozen models; identical original telemetry; shuffled predecessor IDs in evaluation truth; exact repeated inference equality",
+  "model_sha256": {
+    "frozen": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "hard": "5f500d4969855b8338c42deae24e7ee1d99420ca8d8297fe77cc5802be64da7e",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05",
+    "new_gate": "3f236e51f812f50d1d3b11bd78bf9f079326d9674b1b16bb61b3d382d6bb55ff"
+  },
+  "limitations": [
+    "Dynamic label-permutation check only: cannot rule out training-time leakage, generator-induced proxies, or direct truth access in uninspected dependencies",
+    "Ground truth is not an argument of inference(), so this checks repeatability and separation from evaluation labels, not a mutation of any hidden global label store",
+    "Matched-signal counterfactual intentionally excluded because its generation uses benign ground-truth labels",
+    "Synthetic generator only; fixed 1800 alerts and 400 edges; five new seeds"
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "experiment": "E5-C53",
+  "scope": "Post-hoc same-generator development-seed audit of E5-C52, no training or threshold tuning",
+  "seeds": [
+    5200,
+    5201,
+    5202,
+    5203,
+    5204
+  ],
+  "budgets": [
+    1.0,
+    1.25,
+    1.5,
+    2.0,
+    3.0
+  ],
+  "summary": [
+    {
+      "budget_multiplier": 1.0,
+      "mean_candidates_per_child": 13.96965807578286,
+      "candidate_pairs_total": 171914,
+      "eligible_truth_edges": 1105,
+      "top1_correct": 645,
+      "top1_accuracy": 0.583710407239819,
+      "mean_reciprocal_rank": 0.7561635423400129,
+      "top3_recall_given_candidate": 0.9393665158371041,
+      "tp": 345,
+      "fp": 938,
+      "f1_mean": 0.16110827643132253
+    },
+    {
+      "budget_multiplier": 1.25,
+      "mean_candidates_per_child": 17.242575643651087,
+      "candidate_pairs_total": 265555,
+      "eligible_truth_edges": 1366,
+      "top1_correct": 712,
+      "top1_accuracy": 0.5212298682284041,
+      "mean_reciprocal_rank": 0.7160749145924841,
+      "top3_recall_given_candidate": 0.9158125915080527,
+      "tp": 452,
+      "fp": 1462,
+      "f1_mean": 0.18372427914144102
+    },
+    {
+      "budget_multiplier": 1.5,
+      "mean_candidates_per_child": 20.505719542031866,
+      "candidate_pairs_total": 379036,
+      "eligible_truth_edges": 1583,
+      "top1_correct": 753,
+      "top1_accuracy": 0.4756790903348073,
+      "mean_reciprocal_rank": 0.68483540394469,
+      "top3_recall_given_candidate": 0.8900821225521163,
+      "tp": 527,
+      "fp": 2004,
+      "f1_mean": 0.1904619668935163
+    },
+    {
+      "budget_multiplier": 2.0,
+      "mean_candidates_per_child": 27.00597269612756,
+      "candidate_pairs_total": 665790,
+      "eligible_truth_edges": 1989,
+      "top1_correct": 797,
+      "top1_accuracy": 0.4007038712921066,
+      "mean_reciprocal_rank": 0.6248854812580302,
+      "top3_recall_given_candidate": 0.8335847159376572,
+      "tp": 608,
+      "fp": 3210,
+      "f1_mean": 0.1782721252254535
+    },
+    {
+      "budget_multiplier": 3.0,
+      "mean_candidates_per_child": 39.76886754293327,
+      "candidate_pairs_total": 1471026,
+      "eligible_truth_edges": 2589,
+      "top1_correct": 808,
+      "top1_accuracy": 0.3120896098879876,
+      "mean_reciprocal_rank": 0.5428177976266042,
+      "top3_recall_given_candidate": 0.7103128621089224,
+      "tp": 703,
+      "fp": 6093,
+      "f1_mean": 0.1435447949114598
+    }
+  ],
+  "sha256": {
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "reference": "c765ccb19057b7c6c893b720f93eb9448f6878986eaaa4853fb957ef6d028830",
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5"
+  },
+  "limitations": [
+    "Same synthetic generator; not independent validation",
+    "True parent rank requires ground truth and is used only for diagnosis",
+    "Bucket comparisons are descriptive and confounded by alert-budget composition",
+    "Candidate observations within a seed are dependent; no event-level confidence intervals",
+    "Do not select an operating point using this post-hoc analysis"
+  ]
+}

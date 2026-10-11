@@ -1,0 +1,119 @@
+{
+  "design": "E5-C22 code reused with frozen calibration parameters; independent paired synthetic seeds",
+  "source": "src\\causal\\e5c22_forensic_feedback.py",
+  "frozen_settings": {
+    "monitor_only": {
+      "threshold": 0.55,
+      "forensic_weight": 0.0
+    },
+    "isolate_only": {
+      "threshold": 0.75,
+      "forensic_weight": 0.0
+    },
+    "adaptive_no_forensics": {
+      "threshold": 0.85,
+      "forensic_weight": 0.0
+    },
+    "adaptive_with_forensics": {
+      "threshold": 0.85,
+      "forensic_weight": 0.3
+    }
+  },
+  "seeds": [
+    2060,
+    2061,
+    2062,
+    2063,
+    2064
+  ],
+  "episodes_per_seed": 500,
+  "comparisons": {
+    "attack_completion_rate": {
+      "per_seed_differences": {
+        "2060": -0.14644351464435143,
+        "2061": -0.13749999999999998,
+        "2062": -0.1124031007751938,
+        "2063": -0.125,
+        "2064": -0.1259259259259259
+      },
+      "mean_difference": -0.12945450826909422,
+      "sd_across_seeds": 0.013003848561152909,
+      "approximate_95pct_ci_of_mean": [
+        -0.1408528840950197,
+        -0.11805613244316873
+      ],
+      "seeds_with_improvement": 5
+    },
+    "false_isolation_rate": {
+      "per_seed_differences": {
+        "2060": 0.01532567049808431,
+        "2061": 0.007692307692307693,
+        "2062": 0.008264462809917383,
+        "2063": 0.019230769230769246,
+        "2064": 0.017391304347826098
+      },
+      "mean_difference": 0.013580902915780946,
+      "sd_across_seeds": 0.00530151986396294,
+      "approximate_95pct_ci_of_mean": [
+        0.008933915866225411,
+        0.01822788996533648
+      ],
+      "seeds_with_improvement": 0
+    },
+    "mean_action_cost": {
+      "per_seed_differences": {
+        "2060": 0.30679999999999996,
+        "2061": 0.2684000000000002,
+        "2062": 0.31079999999999997,
+        "2063": 0.3380000000000001,
+        "2064": 0.4208000000000003
+      },
+      "mean_difference": 0.3289600000000001,
+      "sd_across_seeds": 0.057019014372400444,
+      "approximate_95pct_ci_of_mean": [
+        0.2789806302784839,
+        0.37893936972151626
+      ],
+      "seeds_with_improvement": 0
+    },
+    "mean_utility_loss": {
+      "per_seed_differences": {
+        "2060": -1.0132000000000003,
+        "2061": -1.0115999999999996,
+        "2062": -0.8092000000000006,
+        "2063": -0.7620000000000005,
+        "2064": -0.8592000000000004
+      },
+      "mean_difference": -0.8910400000000003,
+      "sd_across_seeds": 0.11599641373766663,
+      "approximate_95pct_ci_of_mean": [
+        -0.9927153395753365,
+        -0.789364660424664
+      ],
+      "seeds_with_improvement": 5
+    },
+    "mean_preserved_evidence": {
+      "per_seed_differences": {
+        "2060": -0.05999999999999994,
+        "2061": -0.07399999999999995,
+        "2062": -0.04399999999999993,
+        "2063": -0.04800000000000004,
+        "2064": -0.06600000000000006
+      },
+      "mean_difference": -0.05839999999999999,
+      "sd_across_seeds": 0.012441864811996637,
+      "approximate_95pct_ci_of_mean": [
+        -0.06930577535070294,
+        -0.047494224649297034
+      ],
+      "seeds_with_improvement": 0
+    }
+  },
+  "limitations": [
+    "No recalibration performed; thresholds hard-coded from E5-C22 seed 2053",
+    "95% intervals are approximate normal intervals across only five seeds; descriptive, not definitive",
+    "Synthetic temporal motif, not reconstructed causal chains",
+    "Costs and utility weights are illustrative, not measured",
+    "No PPO, no real network telemetry, no operational IRT"
+  ]
+}

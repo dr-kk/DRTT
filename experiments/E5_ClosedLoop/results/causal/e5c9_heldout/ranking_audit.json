@@ -1,0 +1,29 @@
+{
+  "true_edges": 600,
+  "both_endpoints_detected": 174,
+  "true_parent_in_host_valid_candidates": 174,
+  "candidate_recall": 0.29,
+  "mean_true_parent_rank": 5.4655172413793105,
+  "top_k": {
+    "1": {
+      "hits": 32,
+      "recall_all_edges": 0.05333333333333334,
+      "recall_among_reachable": 0.1839080459770115
+    },
+    "3": {
+      "hits": 82,
+      "recall_all_edges": 0.13666666666666666,
+      "recall_among_reachable": 0.47126436781609193
+    },
+    "5": {
+      "hits": 95,
+      "recall_all_edges": 0.15833333333333333,
+      "recall_among_reachable": 0.5459770114942529
+    },
+    "10": {
+      "hits": 151,
+      "recall_all_edges": 0.25166666666666665,
+      "recall_among_reachable": 0.867816091954023
+    }
+  }
+}

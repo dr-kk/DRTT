@@ -1,0 +1,108 @@
+{
+  "experiment": "E5-C52",
+  "scope": "Exploratory same-generator synthetic sensitivity, seeds 5200-5204; not independent confirmation",
+  "alert_budget_multipliers": [
+    1.0,
+    1.25,
+    1.5,
+    2.0,
+    3.0
+  ],
+  "seeds": [
+    5200,
+    5201,
+    5202,
+    5203,
+    5204
+  ],
+  "selection_rule": "Frozen context detector probability top-N; N=round(multiplier * count(signal >= 0.65))",
+  "summary": [
+    {
+      "budget_multiplier": 1.0,
+      "alerts_mean": 2467.8,
+      "event_detection_recall_mean": 0.5908571428571429,
+      "both_alerted": 1105,
+      "true_parent_candidate": 1105,
+      "top1_correct": 645,
+      "tp": 345,
+      "fp": 938,
+      "precision_pooled": 0.26890101325019483,
+      "recall_pooled": 0.115,
+      "f1_pooled": 0.16110203128648143,
+      "f1_mean": 0.16110827643132253,
+      "false_edges_per_1000_events_mean": 17.53271028037383
+    },
+    {
+      "budget_multiplier": 1.25,
+      "alerts_mean": 3085.0,
+      "event_detection_recall_mean": 0.6594285714285715,
+      "both_alerted": 1366,
+      "true_parent_candidate": 1366,
+      "top1_correct": 712,
+      "tp": 452,
+      "fp": 1462,
+      "precision_pooled": 0.2361546499477534,
+      "recall_pooled": 0.15066666666666667,
+      "f1_pooled": 0.18396418396418396,
+      "f1_mean": 0.18372427914144102,
+      "false_edges_per_1000_events_mean": 27.327102803738313
+    },
+    {
+      "budget_multiplier": 1.5,
+      "alerts_mean": 3701.6,
+      "event_detection_recall_mean": 0.7151428571428571,
+      "both_alerted": 1583,
+      "true_parent_candidate": 1583,
+      "top1_correct": 753,
+      "tp": 527,
+      "fp": 2004,
+      "precision_pooled": 0.20821809561438168,
+      "recall_pooled": 0.17566666666666667,
+      "f1_pooled": 0.19056228530103056,
+      "f1_mean": 0.1904619668935163,
+      "false_edges_per_1000_events_mean": 37.45794392523364
+    },
+    {
+      "budget_multiplier": 2.0,
+      "alerts_mean": 4935.6,
+      "event_detection_recall_mean": 0.806,
+      "both_alerted": 1989,
+      "true_parent_candidate": 1989,
+      "top1_correct": 797,
+      "tp": 608,
+      "fp": 3210,
+      "precision_pooled": 0.15924567836563647,
+      "recall_pooled": 0.20266666666666666,
+      "f1_pooled": 0.17835142270460547,
+      "f1_mean": 0.1782721252254535,
+      "false_edges_per_1000_events_mean": 60.0
+    },
+    {
+      "budget_multiplier": 3.0,
+      "alerts_mean": 7403.4,
+      "event_detection_recall_mean": 0.9268571428571428,
+      "both_alerted": 2589,
+      "true_parent_candidate": 2589,
+      "top1_correct": 808,
+      "tp": 703,
+      "fp": 6093,
+      "precision_pooled": 0.10344320188346086,
+      "recall_pooled": 0.23433333333333334,
+      "f1_pooled": 0.143527970600245,
+      "f1_mean": 0.1435447949114598,
+      "false_edges_per_1000_events_mean": 113.88785046728972
+    }
+  ],
+  "sha256": {
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5"
+  },
+  "limitations": [
+    "Synthetic generator only; no operational or causal attribution validation",
+    "Seeds and budgets are exploratory; do not select and report the best as independently validated",
+    "Ground truth used for diagnosis/evaluation only, never detector or reconstruction inference",
+    "Higher alert budgets change the candidate population and false-attribution opportunity",
+    "Event/edge observations within seeds are dependent; do not treat as independent replicates"
+  ]
+}

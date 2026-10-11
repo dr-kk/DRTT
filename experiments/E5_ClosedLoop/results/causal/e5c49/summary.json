@@ -1,0 +1,96 @@
+{
+  "experiment": "E5-C49",
+  "scope": "development-only; E5-C15 signal-selected train, E5-C17 context-selected evaluation",
+  "train": {
+    "candidate_children": 2467,
+    "correct_top1": 115
+  },
+  "calibration": {
+    "events": 10700,
+    "alerts": 2429,
+    "candidate_children": 2423,
+    "correct_top1": 129
+  },
+  "scores": {
+    "existing_gate": {
+      "n": 2423,
+      "positives": 129,
+      "prevalence": 0.05323978539001238,
+      "auroc": 0.815930333934835,
+      "average_precision": 0.30707814070185285,
+      "brier": 0.17338495241730228,
+      "log_loss": 0.5242770476723626,
+      "mean_probability": 0.3685462919165134
+    },
+    "joint_logistic": {
+      "n": 2423,
+      "positives": 129,
+      "prevalence": 0.05323978539001238,
+      "auroc": 0.8220940370227692,
+      "average_precision": 0.3262543484423206,
+      "brier": 0.04388652875474548,
+      "log_loss": 0.1688971094491933,
+      "mean_probability": 0.07735664328925537
+    },
+    "unweighted_validity_probability": {
+      "n": 2423,
+      "positives": 129,
+      "prevalence": 0.05323978539001238,
+      "auroc": 0.7985949190000203,
+      "average_precision": 0.21726774587106581,
+      "brier": 0.05100725245133729,
+      "log_loss": 0.1918233515871575,
+      "mean_probability": 0.09787648769981665
+    },
+    "gate_times_validity_rank_score": {
+      "auroc": 0.8134972932422295,
+      "average_precision": 0.25921663040452647
+    }
+  },
+  "feature_order": [
+    "candidate_count_log",
+    "best_gap_norm",
+    "mean_gap_norm",
+    "min_parent_signal",
+    "max_parent_signal",
+    "child_signal",
+    "best_score",
+    "score_margin",
+    "score_std",
+    "same_source",
+    "same_destination",
+    "dst_to_src",
+    "src_to_dst",
+    "same_sensor",
+    "same_type",
+    "best_score",
+    "score_margin",
+    "score_mean",
+    "score_std",
+    "log_candidate_count",
+    "best_gap_norm",
+    "best_parent_signal",
+    "child_signal",
+    "same_source",
+    "same_destination",
+    "dst_to_src",
+    "src_to_dst",
+    "same_sensor",
+    "same_type"
+  ],
+  "sha256": {
+    "models": "188e748c96744f30358be7010f92d931eaf72b542c4b65704741f031d93b8a8d",
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "calibration_telemetry": "9569cd87639af8ce2c2c5b05e448a545f70b1e13862fe12fb4f3a95f24fef2b5"
+  },
+  "limitations": [
+    "E5-C17 reused for development; not independent test",
+    "Signal-selected training candidates versus context-selected evaluation candidates",
+    "Some features overlap between validity and gate feature sets",
+    "Random events/campaigns may be correlated within a synthetic seed",
+    "No cutoff selection or end-to-end improvement claim",
+    "Product score is not asserted to be a calibrated probability"
+  ]
+}

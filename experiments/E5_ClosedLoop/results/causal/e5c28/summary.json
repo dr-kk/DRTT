@@ -1,0 +1,39 @@
+{
+  "design": "Frozen E5-C15 model and E5-C17 development-calibrated cutoff; ground truth evaluation only",
+  "datasets": 5,
+  "total_events": 53500,
+  "total_truth_edges": 3000,
+  "model_threshold": 0.65,
+  "model_window": 90,
+  "frozen_cutoff": 2.4413699479901254,
+  "before_rejection": {
+    "predicted": 12373,
+    "true_positive": 542,
+    "false_positive": 11831,
+    "precision": 0.043805059403539966,
+    "recall": 0.18066666666666667,
+    "f1": 0.0705132374943082,
+    "false_edges_per_1000_events": 221.14018691588785
+  },
+  "after_rejection": {
+    "predicted": 3494,
+    "true_positive": 303,
+    "false_positive": 3191,
+    "precision": 0.08672009158557527,
+    "recall": 0.101,
+    "f1": 0.09331690791499844,
+    "false_edges_per_1000_events": 59.64485981308411
+  },
+  "rejected_total": 8879,
+  "rejected_true": 239,
+  "rejected_false": 8640,
+  "fraction_false_among_rejected": 0.9730825543417051,
+  "calibration_method": "e5c17_score_rejection_v1",
+  "limitations": [
+    "Five previously used E5-C18 synthetic test datasets; not fresh external validation",
+    "The original cutoff was chosen to maximize development F1, not precision",
+    "Offline ground truth is used exclusively after telemetry-only inference",
+    "Do not optimize cutoff on these test seeds",
+    "Check original training/calibration seed disjointness separately"
+  ]
+}

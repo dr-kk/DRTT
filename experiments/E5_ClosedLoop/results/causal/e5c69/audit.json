@@ -1,0 +1,84 @@
+{
+  "experiment": "E5-C69",
+  "status": "FROZEN INDEPENDENT SYNTHETIC-GENERATOR VALIDATION; NO RETUNING",
+  "seeds": [
+    6900,
+    6901,
+    6902,
+    6903,
+    6904,
+    6905,
+    6906,
+    6907,
+    6908,
+    6909
+  ],
+  "scenarios": {
+    "reference": [
+      100,
+      2400,
+      10000
+    ],
+    "background_half": [
+      100,
+      2400,
+      5000
+    ],
+    "background_double": [
+      100,
+      2400,
+      20000
+    ],
+    "campaigns_half": [
+      50,
+      2400,
+      10000
+    ],
+    "campaigns_onehalf": [
+      150,
+      2400,
+      10000
+    ],
+    "duration_half": [
+      100,
+      1200,
+      10000
+    ],
+    "duration_double": [
+      100,
+      4800,
+      10000
+    ]
+  },
+  "policies": {
+    "Global": [
+      0.7437635536351849,
+      0.7437635536351849
+    ],
+    "E5-C64": [
+      0.725,
+      0.75
+    ],
+    "E5-C66A": [
+      0.725,
+      0.8
+    ]
+  },
+  "candidate_source": "results\\causal\\e5c66a\\summary.json",
+  "candidate_selection_seeds": "6600-6604",
+  "candidate_development_check_seeds": "6605-6609",
+  "independent_test_seeds": "6900-6909",
+  "predeclared_cost_ratio": 0.1,
+  "predeclared_crossover": 0.05163832434674409,
+  "predeclared_selected_mode": "E5-C66A",
+  "model_sha256": {
+    "ranker": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "caveats": [
+    "E5-C66A candidate was selected on 6600-6604",
+    "6900-6909 were reserved for independent evaluation",
+    "Do not tune after this test",
+    "All shifts use the same synthetic generator family; no real-world claim"
+  ]
+}

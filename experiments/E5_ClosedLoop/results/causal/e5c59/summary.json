@@ -1,0 +1,60 @@
+{
+  "experiment": "E5-C59",
+  "status": "INDEPENDENT FROZEN SYNTHETIC EVALUATION",
+  "seeds": [
+    5900,
+    5901,
+    5902,
+    5903,
+    5904,
+    5905,
+    5906,
+    5907,
+    5908,
+    5909
+  ],
+  "alert_budget": 1.5,
+  "baseline": {
+    "tp": 1059,
+    "fp": 3904,
+    "fn": 4941,
+    "precision": 0.21337900463429377,
+    "recall": 0.1765,
+    "f1": 0.1931952932591444
+  },
+  "proposed": {
+    "tp": 1047,
+    "fp": 3469,
+    "fn": 4953,
+    "precision": 0.23184233835252435,
+    "recall": 0.1745,
+    "f1": 0.19912514263978698
+  },
+  "pooled_f1_delta": 0.005929849380642588,
+  "paired_seed_bootstrap_95ci_f1_delta": [
+    0.0032393158009882523,
+    0.008397973933601357
+  ],
+  "seeds_positive_zero_negative": [
+    9,
+    0,
+    1
+  ],
+  "model_sha256": {
+    "baseline_ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "proposed_ranker": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "original_gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "compatible_gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "train_sha256": {
+    "telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "ground_truth": "04ee0db0795bb3f77166d25f244cad4a7cc26271b76072bce96b330919d087ad"
+  },
+  "limitations": [
+    "Synthetic data from the same generator family",
+    "Ten seeds only; seed-level bootstrap CI is approximate",
+    "No real operational causal ground truth",
+    "Detector trained on E5-C15 training split; both pipelines use identical alerts",
+    "No hyperparameter changes or threshold selection on evaluation seeds"
+  ]
+}

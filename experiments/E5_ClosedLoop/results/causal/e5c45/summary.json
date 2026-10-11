@@ -1,0 +1,83 @@
+{
+  "experiment": "E5-C45",
+  "scope": "frozen candidate-validity models, fixed 0.50 cutoff, fresh specified synthetic seeds",
+  "seed_manifest": [
+    {
+      "seed": 4500,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2485
+    },
+    {
+      "seed": 4501,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2503
+    },
+    {
+      "seed": 4502,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2430
+    },
+    {
+      "seed": 4503,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2483
+    },
+    {
+      "seed": 4504,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2420
+    }
+  ],
+  "summary": {
+    "context_balanced_sigmoid_cv5_validity_0_5": {
+      "tp": 149,
+      "fp": 223,
+      "precision_pooled": 0.40053763440860213,
+      "recall_mean": 0.04966666666666667,
+      "f1_mean": 0.08830682245938656,
+      "false_edges_per_1000_events_mean": 4.16822429906542
+    },
+    "context_balanced_validity_0_5": {
+      "tp": 344,
+      "fp": 920,
+      "precision_pooled": 0.2721518987341772,
+      "recall_mean": 0.11466666666666667,
+      "f1_mean": 0.16127847982099452,
+      "false_edges_per_1000_events_mean": 17.196261682242987
+    },
+    "context_frozen_gate": {
+      "tp": 344,
+      "fp": 951,
+      "precision_pooled": 0.26563706563706563,
+      "recall_mean": 0.11466666666666667,
+      "f1_mean": 0.16010878223531494,
+      "false_edges_per_1000_events_mean": 17.77570093457944
+    },
+    "context_unweighted_validity_0_5": {
+      "tp": 104,
+      "fp": 150,
+      "precision_pooled": 0.4094488188976378,
+      "recall_mean": 0.034666666666666665,
+      "f1_mean": 0.06384950874673544,
+      "false_edges_per_1000_events_mean": 2.803738317757009
+    }
+  },
+  "sha256": {
+    "models": "188e748c96744f30358be7010f92d931eaf72b542c4b65704741f031d93b8a8d",
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8"
+  },
+  "limitations": [
+    "Synthetic generator only; no operational evidence",
+    "Historical nonuse of seeds unverified",
+    "Validity model trained on signal-selected candidates but applied to context-selected candidates (distribution shift)",
+    "0.50 is a fixed probability threshold, not optimized for causal-link F1",
+    "Context detector refitted deterministically on original E5-C15 data",
+    "No claim of superior recall or overall F1 before evaluation"
+  ]
+}

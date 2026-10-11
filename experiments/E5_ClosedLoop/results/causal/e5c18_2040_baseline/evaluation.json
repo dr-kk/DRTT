@@ -1,0 +1,19 @@
+{
+  "event": {
+    "TP": 398,
+    "predicted": 2498,
+    "ground_truth": 700,
+    "precision": 0.15932746196957567,
+    "recall": 0.5685714285714286,
+    "f1": 0.24890556597873673
+  },
+  "transition": {
+    "TP": 13,
+    "predicted": 2492,
+    "ground_truth": 600,
+    "precision": 0.00521669341894061,
+    "recall": 0.021666666666666667,
+    "f1": 0.008408796895213455
+  },
+  "method": "nearest_host_deterministic_v1"
+}

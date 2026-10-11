@@ -1,0 +1,54 @@
+{
+  "experiment": "E5-C35",
+  "dataset": "data\\causal\\e5c17_calibration",
+  "events": 10700,
+  "malicious_events": 700,
+  "window": 90,
+  "causal_feature_policy": "strictly prior timestamps; same timestamp excluded",
+  "label_usage": "labels used only for post-hoc AUC, never feature construction",
+  "feature_metrics": [
+    {
+      "feature": "signal",
+      "malicious_mean": 0.678608971428571,
+      "benign_mean": 0.46724147000000055,
+      "auc": 0.7590541428571429,
+      "orientation_free_auc": 0.7590541428571429
+    },
+    {
+      "feature": "prior_src_activity",
+      "malicious_mean": 42.79,
+      "benign_mean": 39.3794,
+      "auc": 0.6167515,
+      "orientation_free_auc": 0.6167515
+    },
+    {
+      "feature": "prior_dst_activity",
+      "malicious_mean": 41.27857142857143,
+      "benign_mean": 39.5673,
+      "auc": 0.5471583571428571,
+      "orientation_free_auc": 0.5471583571428571
+    },
+    {
+      "feature": "prior_pair_activity",
+      "malicious_mean": 1.3985714285714286,
+      "benign_mean": 0.9965,
+      "auc": 0.6050125,
+      "orientation_free_auc": 0.6050125
+    },
+    {
+      "feature": "prior_src_recency",
+      "malicious_mean": 0.33553214840714846,
+      "benign_mean": 0.3342951869623893,
+      "auc": 0.5014396428571428,
+      "orientation_free_auc": 0.5014396428571428
+    },
+    {
+      "feature": "prior_dst_recency",
+      "malicious_mean": 0.3218832277359477,
+      "benign_mean": 0.3313799571907384,
+      "auc": 0.4800847142857143,
+      "orientation_free_auc": 0.5199152857142857
+    }
+  ],
+  "limitations": "univariate development-set feasibility only; no model trained; no test-set claim"
+}

@@ -1,0 +1,53 @@
+{
+  "design": "Calibration-only exploratory precision-constrained cutoff feasibility; not test validation",
+  "dataset": "e5c17_calibration",
+  "training_dataset": "e5c15_train",
+  "events": 10700,
+  "selected_events": 2429,
+  "truth_edges": 600,
+  "scored_children": 2420,
+  "correct_top1_before_rejection": 124,
+  "model_threshold": 0.65,
+  "model_window": 90,
+  "targets": [
+    {
+      "target_precision": 0.2,
+      "min_predictions": 30,
+      "calibration_feasible": false,
+      "selected": null,
+      "note": "No cutoff meets target and minimum prediction count on calibration data"
+    },
+    {
+      "target_precision": 0.3,
+      "min_predictions": 30,
+      "calibration_feasible": false,
+      "selected": null,
+      "note": "No cutoff meets target and minimum prediction count on calibration data"
+    },
+    {
+      "target_precision": 0.5,
+      "min_predictions": 30,
+      "calibration_feasible": false,
+      "selected": null,
+      "note": "No cutoff meets target and minimum prediction count on calibration data"
+    }
+  ],
+  "train_calibration_file_hashes": {
+    "train": {
+      "telemetry.csv": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+      "ground_truth.csv": "04ee0db0795bb3f77166d25f244cad4a7cc26271b76072bce96b330919d087ad"
+    },
+    "calibration": {
+      "telemetry.csv": "9569cd87639af8ce2c2c5b05e448a545f70b1e13862fe12fb4f3a95f24fef2b5",
+      "ground_truth.csv": "89a13cf4e6a65437eddbfdf18160ab7d7fefbeec1041352109c4a873713cc1ec"
+    }
+  },
+  "provenance": "Different file hashes verified; original generator seed disjointness NOT established",
+  "limitations": [
+    "Same calibration dataset was previously used to select E5-C17 F1 cutoff",
+    "These are in-sample exploratory operating points, not independent validation",
+    "Minimum support does not ensure a precision guarantee",
+    "Do not tune or evaluate on previously inspected E5-C18 seeds",
+    "Synthetic correlated events are not independently verified real-world causal chains"
+  ]
+}

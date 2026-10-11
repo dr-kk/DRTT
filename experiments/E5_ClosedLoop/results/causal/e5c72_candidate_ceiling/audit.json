@@ -1,0 +1,39 @@
+{
+  "experiment": "E5-C72",
+  "seeds": [
+    7201,
+    7202,
+    7203,
+    7204,
+    7205
+  ],
+  "window": 90,
+  "scenarios": "reference only",
+  "policies": {
+    "Global": [
+      0.7437635536351849,
+      0.7437635536351849
+    ],
+    "E5-C64": [
+      0.725,
+      0.75
+    ],
+    "E5-C66A": [
+      0.725,
+      0.8
+    ]
+  },
+  "model_sha256": {
+    "old": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "new": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "old_gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "notes": [
+    "Frozen models; no retuning",
+    "Matched baseline has same edge count as learned policy",
+    "Same-child baseline holds selected children constant",
+    "Candidate ceiling counts true edges with both alerts and eligible host/time pair",
+    "Synthetic generator only; no external validation"
+  ]
+}

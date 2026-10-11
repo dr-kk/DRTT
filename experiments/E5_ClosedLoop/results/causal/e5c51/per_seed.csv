@@ -1,0 +1,6 @@
+seed,alerts,candidate_children,truth_edges,child_alerted,both_alerted,true_parent_candidate,top1_correct,gate_correct_accepted,joint_correct_accepted,lost_child_detection,lost_parent_detection,lost_candidate_generation,lost_ranking,lost_gate_rejection,lost_joint_rejection
+5000,2441,2433,600,363,221,221,134,74,23,237,142,0,87,60,111
+5001,2467,2458,600,344,213,213,125,68,18,256,131,0,88,57,107
+5002,2485,2476,600,359,214,214,134,72,21,241,145,0,80,62,113
+5003,2467,2459,600,360,214,214,131,80,35,240,146,0,83,51,96
+5004,2427,2419,600,344,205,205,126,60,18,256,139,0,79,66,108

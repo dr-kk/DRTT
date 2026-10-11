@@ -1,0 +1,42 @@
+{
+  "experiment": "E5-C75",
+  "gate_fit_seeds": [
+    7501,
+    7502,
+    7503,
+    7504,
+    7505
+  ],
+  "gate_validation_seeds": [
+    7506,
+    7507,
+    7508
+  ],
+  "test_seeds": [
+    7509,
+    7510,
+    7511,
+    7512,
+    7513
+  ],
+  "selected_C": 0.1,
+  "fit_gate_rows": 18583,
+  "fit_gate_positive": 833,
+  "alert_budget_multiplier": 1.5,
+  "budget_rule": "Per-seed frozen original Global cutoff edge count, fixed for both models and original/matched variants; label-free",
+  "matched_rule": "Each event signal independently resampled from original benign marginal; original alert count retained",
+  "model_sha256": {
+    "old": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "frozen": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05",
+    "hard": "5f500d4969855b8338c42deae24e7ee1d99420ca8d8297fe77cc5802be64da7e"
+  },
+  "limitations": [
+    "Synthetic generator only",
+    "Original frozen gate trained on earlier data; hard-negative gate trained on new fit seeds",
+    "Gate regularization chosen on validation only",
+    "Matched-signal counterfactual distribution shift",
+    "Equal edge budget does not imply equal calibration quality",
+    "Test seeds untouched by fitting or selection"
+  ]
+}

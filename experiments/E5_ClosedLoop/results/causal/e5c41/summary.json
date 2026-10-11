@@ -1,0 +1,55 @@
+{
+  "experiment": "E5-C41",
+  "scope": "development-only exploratory candidate availability, NOT independent validation",
+  "target": "actual predecessor exists among observable candidates (NOT top1 correctness)",
+  "train": {
+    "events": 10700,
+    "selected": 2475,
+    "candidate_children": 2467,
+    "available": 194
+  },
+  "calibration": {
+    "events": 10700,
+    "selected": 2429,
+    "candidate_children": 2420,
+    "available": 212
+  },
+  "features": [
+    "candidate_count_log",
+    "best_gap_norm",
+    "mean_gap_norm",
+    "min_parent_signal",
+    "max_parent_signal",
+    "child_signal",
+    "best_score",
+    "score_margin",
+    "score_std",
+    "same_source",
+    "same_destination",
+    "dst_to_src",
+    "src_to_dst",
+    "same_sensor",
+    "same_type"
+  ],
+  "threshold": 0.5,
+  "calibration_metrics": {
+    "auroc": 0.8135467938200711,
+    "average_precision": 0.3454716766391662,
+    "log_loss": 0.5152391225841368,
+    "precision_at_0_5": 0.20798898071625344,
+    "recall_at_0_5": 0.7122641509433962,
+    "f1_at_0_5": 0.32196162046908317,
+    "predicted_available": 726
+  },
+  "sha256": {
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "calibration_telemetry": "9569cd87639af8ce2c2c5b05e448a545f70b1e13862fe12fb4f3a95f24fef2b5"
+  },
+  "limitations": [
+    "Calibration reused by earlier experiments; exploratory only",
+    "Same synthetic generator",
+    "No model selection on E5-C39/C40 data",
+    "No end-to-end improvement established"
+  ]
+}

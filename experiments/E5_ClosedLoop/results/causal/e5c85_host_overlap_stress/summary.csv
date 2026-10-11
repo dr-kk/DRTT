@@ -1,0 +1,5 @@
+variant,model,seeds,truth,predicted,tp,fp,fn,precision,recall,pooled_f1,alert_reachable,host_compatible_reachable
+original,Frozen,10,6000,4000,628,3372,5372,0.157,0.10466666666666667,0.1256,1541,1541
+original,HardNegative,10,6000,4000,631,3369,5369,0.15775,0.10516666666666667,0.1262,1541,1541
+benign_host_overlap,Frozen,10,6000,4000,474,3526,5526,0.1185,0.079,0.0948,1365,1365
+benign_host_overlap,HardNegative,10,6000,4000,473,3527,5527,0.11825,0.07883333333333334,0.0946,1365,1365

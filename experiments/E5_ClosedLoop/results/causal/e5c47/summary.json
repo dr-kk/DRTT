@@ -1,0 +1,73 @@
+{
+  "experiment": "E5-C47",
+  "scope": "frozen threshold on five new same-generator synthetic seeds",
+  "threshold": 0.18926018798147812,
+  "selection_sha256": "64215b3fc040a1e5f0e9c92434dd2446bb5d40b73748edfb0cf6519f4f39a233",
+  "manifest": [
+    {
+      "seed": 4700,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2373
+    },
+    {
+      "seed": 4701,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2467
+    },
+    {
+      "seed": 4702,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2467
+    },
+    {
+      "seed": 4703,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2519
+    },
+    {
+      "seed": 4704,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2464
+    }
+  ],
+  "summary": {
+    "context_frozen_gate": {
+      "tp": 331,
+      "fp": 923,
+      "precision_pooled": 0.26395534290271133,
+      "recall_mean": 0.11033333333333335,
+      "f1_mean": 0.15548751234550903,
+      "false_edges_per_1000_events_mean": 17.252336448598133
+    },
+    "context_unweighted_frozen_e5c46": {
+      "tp": 283,
+      "fp": 661,
+      "precision_pooled": 0.2997881355932203,
+      "recall_mean": 0.09433333333333334,
+      "f1_mean": 0.14339728362112045,
+      "false_edges_per_1000_events_mean": 12.35514018691589
+    }
+  },
+  "paired_aggregate": {
+    "tp_retention": 0.8549848942598187,
+    "fp_reduction": 0.2838569880823402,
+    "delta_f1_mean": -0.012090228724388585
+  },
+  "sha256": {
+    "models": "188e748c96744f30358be7010f92d931eaf72b542c4b65704741f031d93b8a8d",
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8"
+  },
+  "limitations": [
+    "Only synthetic data from the same generator",
+    "Historical seed independence unverified",
+    "No real operational or causal attribution validation",
+    "Validity model trained on signal-selected, applied to context-selected candidates",
+    "Do not tune the selected threshold after inspecting this evaluation"
+  ]
+}

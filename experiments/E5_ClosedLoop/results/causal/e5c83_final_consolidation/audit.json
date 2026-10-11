@@ -1,0 +1,45 @@
+{
+  "experiment": "E5-C83",
+  "type": "read-only final consolidation",
+  "source_files": {
+    "C79": "results\\causal\\e5c79_structure_aware_alert_selection\\test_summary.csv",
+    "C80": "results\\causal\\e5c80_component_ablation\\test_summary.csv",
+    "C81": "results\\causal\\e5c81_fair_baseline_comparison\\test_summary.csv",
+    "C82": "results\\causal\\e5c82_paired_statistical_analysis\\paired_comparisons.csv",
+    "C82_CI": "results\\causal\\e5c82_paired_statistical_analysis\\method_ci95.csv"
+  },
+  "source_sha256": {
+    "C79": "bb03ef365b6501e9bff8a8b077bacbc0d5a35d4ff1708cace56ee190be6aebd8",
+    "C80": "ca7783f7cb1bc800cfefe641072f07966c010eec91250b83e6594ea00b5378ed",
+    "C81": "fb80ec4856bb13c5a2f7c37f3c1259741e520d8fa43dddb74c67171ecad8cf00",
+    "C82": "3c801bbd3e8353af0f22e420822b7668b5618d8a493dc5735115673620d0a7b5",
+    "C82_CI": "e922bc884c9b65a62a785cb2890dbca7e0c643e24bc0060669f339273d056cbc",
+    "C79_seeds": "ccdc6eb4f022afc154367b03161771175f4793e0275905831b3135422a17cf34",
+    "C80_seeds": "f18ac8cba974b778bc84b067caaff435f7a251148f5942d87c945da533a893fa",
+    "C81_seeds": "b8920d91fb94fe70deb9519be749cbd38c65f1190cc9992ef07c7d05d8f3fa80"
+  },
+  "test_seed_ranges": {
+    "C79": [
+      7904,
+      7908
+    ],
+    "C80": [
+      8001,
+      8005
+    ],
+    "C81": [
+      8101,
+      8105
+    ]
+  },
+  "data_integrity": "summary arithmetic, five-seed identity, fixed truth/prediction totals, and C82 paired delta checked",
+  "no_training": true,
+  "no_new_test_seeds": true,
+  "cautions": [
+    "Synthetic only",
+    "Different seed groups across experiments",
+    "No Holm-significant differences",
+    "Five seeds insufficient for strong inferential claims",
+    "Heuristics are not published SOTA"
+  ]
+}

@@ -1,0 +1,11 @@
+seed,variant,truth,alerts,alert_edge_reachable,candidate_reachable,candidate_children
+8101,original,600,1800,161,161,1795
+8101,matched_signal,600,1800,33,33,1791
+8102,original,600,1800,153,153,1795
+8102,matched_signal,600,1800,21,21,1792
+8103,original,600,1800,150,150,1792
+8103,matched_signal,600,1800,32,32,1793
+8104,original,600,1800,170,170,1791
+8104,matched_signal,600,1800,27,27,1793
+8105,original,600,1800,138,138,1792
+8105,matched_signal,600,1800,36,36,1790

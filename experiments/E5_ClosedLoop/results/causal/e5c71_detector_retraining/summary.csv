@@ -1,0 +1,17 @@
+train,test,policy,seeds,mean_auroc,mean_ap,mean_f1,pooled_f1,tp,fp,fn
+original_train,original_test,Global,5,0.763157,0.209611,0.190739,0.190806,496,1703,2504
+original_train,original_test,E5-C64,5,0.763157,0.209611,0.189463,0.189539,491,1690,2509
+original_train,original_test,E5-C66A,5,0.763157,0.209611,0.187167,0.187275,443,1288,2557
+original_train,original_test,TemporalHost,5,0.763157,0.209611,0.006915,0.006912,74,18338,2926
+original_train,matched_test,Global,5,0.545364,0.077532,0.052843,0.053082,121,1438,2879
+original_train,matched_test,E5-C64,5,0.545364,0.077532,0.051118,0.051327,116,1404,2884
+original_train,matched_test,E5-C66A,5,0.545364,0.077532,0.045197,0.045366,93,1007,2907
+original_train,matched_test,TemporalHost,5,0.545364,0.077532,0.002431,0.002429,26,18386,2974
+matched_train,original_test,Global,5,0.616776,0.099299,0.099739,0.09993,215,1088,2785
+matched_train,original_test,E5-C64,5,0.616776,0.099299,0.100075,0.100258,214,1055,2786
+matched_train,original_test,E5-C66A,5,0.616776,0.099299,0.091319,0.091396,179,738,2821
+matched_train,original_test,TemporalHost,5,0.616776,0.099299,0.00328,0.00327,35,18372,2965
+matched_train,matched_test,Global,5,0.632879,0.104866,0.037285,0.037341,75,942,2925
+matched_train,matched_test,E5-C64,5,0.632879,0.104866,0.03518,0.035256,70,901,2930
+matched_train,matched_test,E5-C66A,5,0.632879,0.104866,0.02573,0.025888,47,584,2953
+matched_train,matched_test,TemporalHost,5,0.632879,0.104866,0.003467,0.003457,37,18370,2963

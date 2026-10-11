@@ -1,0 +1,48 @@
+{
+  "experiment": "E5-C82",
+  "input": "results\\causal\\e5c81_fair_baseline_comparison\\test_seed_metrics.csv",
+  "input_sha256": "b8920d91fb94fe70deb9519be749cbd38c65f1190cc9992ef07c7d05d8f3fa80",
+  "seeds": [
+    8101,
+    8102,
+    8103,
+    8104,
+    8105
+  ],
+  "bootstrap_replicates": 20000,
+  "bootstrap_random_seed": 820082,
+  "comparison_family": [
+    [
+      "HardNegative",
+      "Frozen"
+    ],
+    [
+      "HardNegative",
+      "TemporalHost"
+    ],
+    [
+      "Frozen",
+      "TemporalHost"
+    ],
+    [
+      "HardNegative",
+      "SeededRandom"
+    ]
+  ],
+  "variants": [
+    "original",
+    "matched_signal"
+  ],
+  "bootstrap_unit": "Independent generator seed; paired cluster resampling across methods",
+  "ci": "Percentile paired bootstrap 95%; exploratory with only five clusters",
+  "test": "Exact two-sided paired sign-flip test on per-seed F1 differences",
+  "multiplicity": "Holm correction across eight comparisons",
+  "limitations": [
+    "Only five independent synthetic seeds; bootstrap CIs may be unstable",
+    "Exact sign-flip test assumes exchangeability/symmetric null; with five seeds its p-value resolution is coarse",
+    "A small p-value does not establish real-world generalization",
+    "Heuristic baselines are not published SOTA methods",
+    "Test set used for evaluation only; no hyperparameter selection",
+    "Matched-signal perturbation is synthetic and label-informed during generation"
+  ]
+}

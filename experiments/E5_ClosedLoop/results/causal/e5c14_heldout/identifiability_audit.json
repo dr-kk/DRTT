@@ -1,0 +1,65 @@
+{
+  "dataset": ".\\data\\causal\\e5c5_heldout\\telemetry.csv",
+  "true_edges": 600,
+  "threshold": 0.65,
+  "window": 90,
+  "counts": {
+    "true_edges_with_detected_child": 324,
+    "both_endpoints_detected": 174,
+    "reachable_edges": 174,
+    "nearest_top1_correct": 19,
+    "nearest_top3_contains": 96,
+    "nearest_top5_contains": 144,
+    "nearest_top10_contains": 174,
+    "true_parent_has_equal_gap_competitor": 34,
+    "true_parent_has_exact_feature_twin": 4
+  },
+  "candidate_recall_all_edges": 0.29,
+  "mean_host_valid_candidates": 16.316091954022987,
+  "median_nearest_true_parent_rank": 3.0,
+  "nearest_top1_recall_among_reachable": 0.10919540229885058,
+  "exact_feature_twin_fraction_among_reachable": 0.022988505747126436,
+  "examples": [
+    {
+      "child_event_id": "EV00000780",
+      "true_parent_event_id": "EV00000704",
+      "nearest_rank": 7,
+      "candidate_count": 19,
+      "equal_gap_candidates": 2,
+      "identical_feature_candidates": 1
+    },
+    {
+      "child_event_id": "EV00002587",
+      "true_parent_event_id": "EV00002480",
+      "nearest_rank": 6,
+      "candidate_count": 15,
+      "equal_gap_candidates": 1,
+      "identical_feature_candidates": 1
+    },
+    {
+      "child_event_id": "EV00002788",
+      "true_parent_event_id": "EV00002703",
+      "nearest_rank": 7,
+      "candidate_count": 26,
+      "equal_gap_candidates": 1,
+      "identical_feature_candidates": 1
+    },
+    {
+      "child_event_id": "EV00002892",
+      "true_parent_event_id": "EV00002778",
+      "nearest_rank": 7,
+      "candidate_count": 17,
+      "equal_gap_candidates": 1,
+      "identical_feature_candidates": 1
+    },
+    {
+      "child_event_id": "EV00003155",
+      "true_parent_event_id": "EV00003055",
+      "nearest_rank": 6,
+      "candidate_count": 18,
+      "equal_gap_candidates": 2,
+      "identical_feature_candidates": 1
+    }
+  ],
+  "limitations": "Uses ground truth for analysis; identical chosen features do not establish full statistical non-identifiability; generator is synthetic."
+}

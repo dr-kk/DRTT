@@ -1,0 +1,96 @@
+{
+  "experiment": "E5-C43",
+  "scope": "DEVELOPMENT ONLY; E5-C17 reused in earlier experiments; no independent generalization claim",
+  "method": "Balanced and unweighted LR fit E5-C15; sigmoid calibrated balanced LR with stratified 5-fold CV entirely within E5-C15",
+  "train": {
+    "events": 10700,
+    "selected": 2475,
+    "candidate_children": 2467,
+    "available": 194
+  },
+  "calibration": {
+    "events": 10700,
+    "selected": 2429,
+    "candidate_children": 2420,
+    "available": 212
+  },
+  "train_prevalence": 0.07863802188893393,
+  "calibration_prevalence": 0.08760330578512397,
+  "calibration_base_rate_brier": 0.07992896660064203,
+  "models": {
+    "balanced": {
+      "auroc": 0.8135467938200711,
+      "average_precision": 0.3454716766391662,
+      "log_loss": 0.5152391225841368,
+      "brier": 0.172844073993489,
+      "ece_10": 0.27575525239699894,
+      "mean_probability": 0.36335855818212287,
+      "precision_at_0_5": 0.20798898071625344,
+      "recall_at_0_5": 0.7122641509433962,
+      "f1_at_0_5": 0.32196162046908317,
+      "tp": 151,
+      "fp": 575,
+      "fn": 61,
+      "tn": 1633
+    },
+    "unweighted": {
+      "auroc": 0.8126730414273995,
+      "average_precision": 0.3475698019027174,
+      "log_loss": 0.23940967123340032,
+      "brier": 0.06749660667277974,
+      "ece_10": 0.010381686688596122,
+      "mean_probability": 0.07987628318191163,
+      "precision_at_0_5": 0.5714285714285714,
+      "recall_at_0_5": 0.07547169811320754,
+      "f1_at_0_5": 0.13333333333333333,
+      "tp": 16,
+      "fp": 12,
+      "fn": 196,
+      "tn": 2196
+    },
+    "balanced_sigmoid_cv5": {
+      "auroc": 0.8130362147935466,
+      "average_precision": 0.34415453613037966,
+      "log_loss": 0.23990732373619142,
+      "brier": 0.06798599390177676,
+      "ece_10": 0.009511987516064552,
+      "mean_probability": 0.07955422686867131,
+      "precision_at_0_5": 0.6428571428571429,
+      "recall_at_0_5": 0.04245283018867924,
+      "f1_at_0_5": 0.07964601769911504,
+      "tp": 9,
+      "fp": 5,
+      "fn": 203,
+      "tn": 2203
+    }
+  },
+  "features": [
+    "candidate_count_log",
+    "best_gap_norm",
+    "mean_gap_norm",
+    "min_parent_signal",
+    "max_parent_signal",
+    "child_signal",
+    "best_score",
+    "score_margin",
+    "score_std",
+    "same_source",
+    "same_destination",
+    "dst_to_src",
+    "src_to_dst",
+    "same_sensor",
+    "same_type"
+  ],
+  "sha256": {
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "calibration_telemetry": "9569cd87639af8ce2c2c5b05e448a545f70b1e13862fe12fb4f3a95f24fef2b5"
+  },
+  "limitations": [
+    "Synthetic generator only",
+    "E5-C17 already used for model development",
+    "No threshold optimization",
+    "No frozen end-to-end test",
+    "CV folds are event-level and may share campaigns; not independent campaign validation"
+  ]
+}

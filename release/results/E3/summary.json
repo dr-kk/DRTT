@@ -1,0 +1,88 @@
+{
+  "experiment": "E3 DRTT Component Ablation",
+  "campaigns": 100,
+  "dropout": 0.16,
+  "same_campaign_seeds_as_E2_v3": true,
+  "scope": "controlled synthetic cyber-range benchmark",
+  "variants": [
+    {
+      "variant": "DRTT-Full",
+      "irt_mean": 6.056259486765413,
+      "irt_sd": 2.270565757246233,
+      "detection_rate_mean": 0.7499999999999999,
+      "detection_rate_sd": 0.16036317265793468,
+      "fpr_mean": 0.04728205128205128,
+      "fpr_sd": 0.015574755264445104,
+      "fra_mean": 0.8657142857142855,
+      "fra_sd": 0.13286870188199412,
+      "overhead_ms_per_event_mean": 0.06641670735098287,
+      "overhead_ms_per_event_sd": 0.006215007904012552
+    },
+    {
+      "variant": "w/o RL Adaptation",
+      "irt_mean": 8.206259486765413,
+      "irt_sd": 2.270565757246233,
+      "detection_rate_mean": 0.7499999999999999,
+      "detection_rate_sd": 0.16036317265793468,
+      "fpr_mean": 0.04728205128205128,
+      "fpr_sd": 0.015574755264445104,
+      "fra_mean": 0.8657142857142855,
+      "fra_sd": 0.13286870188199412,
+      "overhead_ms_per_event_mean": 0.067235635402285,
+      "overhead_ms_per_event_sd": 0.007272323076775847
+    },
+    {
+      "variant": "w/o Forensic Triangulation",
+      "irt_mean": 6.258759486765412,
+      "irt_sd": 2.3629440232230183,
+      "detection_rate_mean": 0.7499999999999999,
+      "detection_rate_sd": 0.16036317265793468,
+      "fpr_mean": 0.04728205128205128,
+      "fpr_sd": 0.015574755264445104,
+      "fra_mean": 0.7499999999999999,
+      "fra_sd": 0.16036317265793468,
+      "overhead_ms_per_event_mean": 0.060784179635246204,
+      "overhead_ms_per_event_sd": 0.00525490681549111
+    },
+    {
+      "variant": "w/o Feedback Loop",
+      "irt_mean": 6.806259486765413,
+      "irt_sd": 2.270565757246233,
+      "detection_rate_mean": 0.7257142857142855,
+      "detection_rate_sd": 0.16075476482369963,
+      "fpr_mean": 0.04046153846153846,
+      "fpr_sd": 0.013827723784198862,
+      "fra_mean": 0.8657142857142855,
+      "fra_sd": 0.13286870188199412,
+      "overhead_ms_per_event_mean": 0.06253014414086067,
+      "overhead_ms_per_event_sd": 0.005871571041396661
+    }
+  ],
+  "deltas_vs_full": [
+    {
+      "variant": "w/o RL Adaptation",
+      "irt_increase_vs_full": 2.1500000000000004,
+      "detection_change_pp": 0.0,
+      "fpr_change_pp": 0.0,
+      "fra_change_pp": 0.0,
+      "overhead_change_ms_per_event": 0.0008189280513021258
+    },
+    {
+      "variant": "w/o Forensic Triangulation",
+      "irt_increase_vs_full": 0.20249999999999968,
+      "detection_change_pp": 0.0,
+      "fpr_change_pp": 0.0,
+      "fra_change_pp": -11.571428571428566,
+      "overhead_change_ms_per_event": -0.00563252771573667
+    },
+    {
+      "variant": "w/o Feedback Loop",
+      "irt_increase_vs_full": 0.75,
+      "detection_change_pp": -2.4285714285714355,
+      "fpr_change_pp": -0.6820512820512818,
+      "fra_change_pp": 0.0,
+      "overhead_change_ms_per_event": -0.003886563210122207
+    }
+  ],
+  "note": "RL ablation changes response adaptation/workflow; it does not retrain PPO."
+}

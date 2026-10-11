@@ -1,0 +1,10 @@
+{
+  "method": "nearest_host_deterministic_v1",
+  "events": 10700,
+  "predicted_positive_events": 2493,
+  "predicted_edges": 2487,
+  "threshold": 0.65,
+  "window": 90,
+  "tie_break": "min time gap, then parent event ID ascending",
+  "ground_truth_used": false
+}

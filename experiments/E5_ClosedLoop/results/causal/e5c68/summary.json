@@ -1,0 +1,52 @@
+{
+  "experiment": "E5-C68",
+  "status": "DEVELOPMENT-ONLY; NO INDEPENDENT TEST",
+  "source": "results\\causal\\e5c67",
+  "seeds": [
+    6605,
+    6606,
+    6607,
+    6608,
+    6609
+  ],
+  "objective": "minimize C_FP * FP + C_FN * FN",
+  "assumption": "Each false positive and false negative carries a constant per-edge cost; ratios are illustrative, not empirically calibrated.",
+  "aggregates": {
+    "E5-C64": {
+      "tp": 3189,
+      "fp": 19795,
+      "fn": 17811
+    },
+    "E5-C66A": {
+      "tp": 2940,
+      "fp": 14973,
+      "fn": 18060
+    },
+    "Global": {
+      "tp": 3161,
+      "fp": 20264,
+      "fn": 17839
+    }
+  },
+  "crossovers": [
+    {
+      "policy_a": "E5-C64",
+      "policy_b": "E5-C66A",
+      "equal_loss_fp_to_fn_ratio": 0.05163832434674409,
+      "nonnegative_crossover": true
+    },
+    {
+      "policy_a": "E5-C64",
+      "policy_b": "Global",
+      "equal_loss_fp_to_fn_ratio": -0.05970149253731343,
+      "nonnegative_crossover": false
+    },
+    {
+      "policy_a": "E5-C66A",
+      "policy_b": "Global",
+      "equal_loss_fp_to_fn_ratio": 0.04176904176904177,
+      "nonnegative_crossover": true
+    }
+  ],
+  "warning": "Do not select or claim independently validated superiority using E5-C63/E5-C65; prospective policy choice needs operationally justified costs and new held-out testing."
+}

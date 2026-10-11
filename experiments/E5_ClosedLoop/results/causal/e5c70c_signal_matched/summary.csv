@@ -1,0 +1,7 @@
+variant,policy,seeds,mean_detector_auroc,mean_detector_ap,mean_reconstruction_f1,pooled_reconstruction_f1,total_tp,total_fp,total_fn
+original,Global,5,0.766827,0.220898,0.200009,0.200038,524,1715,2476
+original,E5-C64,5,0.766827,0.220898,0.199965,0.2,520,1680,2480
+original,E5-C66A,5,0.766827,0.220898,0.199914,0.199916,474,1268,2526
+matched_signal,Global,5,0.53564,0.074667,0.041209,0.04112,94,1478,2906
+matched_signal,E5-C64,5,0.53564,0.074667,0.041092,0.041032,93,1440,2907
+matched_signal,E5-C66A,5,0.53564,0.074667,0.030353,0.030348,62,1024,2938

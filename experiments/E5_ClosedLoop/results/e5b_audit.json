@@ -1,0 +1,27 @@
+{
+  "experiment": "E5-B",
+  "telemetry_events": 5000,
+  "label_permutation_invariant": true,
+  "inference_hash": "b73023c9a22bd9352df9fe2df3cc0284181b49b2830678bb2e8fb98eaf81945b",
+  "forensic_event_metrics": {
+    "TP": 411,
+    "FP": 1322,
+    "TN": 2944,
+    "FN": 323,
+    "precision": 0.237161,
+    "recall": 0.559946,
+    "f1": 0.333198,
+    "fpr": 0.309892
+  },
+  "signal_only_baseline": {
+    "TP": 312,
+    "FP": 666,
+    "TN": 3600,
+    "FN": 422,
+    "precision": 0.319018,
+    "recall": 0.425068,
+    "f1": 0.364486,
+    "fpr": 0.156118
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,65 @@
+{
+  "dataset": ".\\data\\causal\\e5c5\\telemetry.csv",
+  "true_edges": 600,
+  "threshold": 0.65,
+  "window": 90,
+  "counts": {
+    "true_edges_with_detected_child": 360,
+    "both_endpoints_detected": 222,
+    "reachable_edges": 222,
+    "nearest_top3_contains": 118,
+    "nearest_top5_contains": 188,
+    "nearest_top10_contains": 222,
+    "true_parent_has_equal_gap_competitor": 35,
+    "nearest_top1_correct": 22,
+    "true_parent_has_exact_feature_twin": 2
+  },
+  "candidate_recall_all_edges": 0.37,
+  "mean_host_valid_candidates": 16.765765765765767,
+  "median_nearest_true_parent_rank": 3.0,
+  "nearest_top1_recall_among_reachable": 0.0990990990990991,
+  "exact_feature_twin_fraction_among_reachable": 0.009009009009009009,
+  "examples": [
+    {
+      "child_event_id": "EV00000922",
+      "true_parent_event_id": "EV00000836",
+      "nearest_rank": 7,
+      "candidate_count": 23,
+      "equal_gap_candidates": 1,
+      "identical_feature_candidates": 1
+    },
+    {
+      "child_event_id": "EV00000967",
+      "true_parent_event_id": "EV00000878",
+      "nearest_rank": 6,
+      "candidate_count": 18,
+      "equal_gap_candidates": 1,
+      "identical_feature_candidates": 1
+    },
+    {
+      "child_event_id": "EV00001057",
+      "true_parent_event_id": "EV00000967",
+      "nearest_rank": 6,
+      "candidate_count": 23,
+      "equal_gap_candidates": 1,
+      "identical_feature_candidates": 1
+    },
+    {
+      "child_event_id": "EV00001966",
+      "true_parent_event_id": "EV00001874",
+      "nearest_rank": 6,
+      "candidate_count": 18,
+      "equal_gap_candidates": 1,
+      "identical_feature_candidates": 1
+    },
+    {
+      "child_event_id": "EV00002143",
+      "true_parent_event_id": "EV00002017",
+      "nearest_rank": 8,
+      "candidate_count": 17,
+      "equal_gap_candidates": 1,
+      "identical_feature_candidates": 1
+    }
+  ],
+  "limitations": "Uses ground truth for analysis; identical chosen features do not establish full statistical non-identifiability; generator is synthetic."
+}

@@ -1,0 +1,64 @@
+{
+  "experiment": "E5-C38",
+  "scope": "fresh synthetic evaluation, no test-label tuning",
+  "seeds": [
+    3800,
+    3801,
+    3802,
+    3803,
+    3804
+  ],
+  "generator": {
+    "campaigns": 100,
+    "duration": 2400,
+    "background": 10000
+  },
+  "alert_budget": "context selects top-N per test realization, N equals number of signal>=0.65 alerts (unlabeled budget matching)",
+  "calibration_signal_alert_fraction": 0.22700934579439253,
+  "gate_cutoff": 0.7321456700388247,
+  "model_sha256": {
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8"
+  },
+  "train_calibration_hashes": {
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "calibration_telemetry": "9569cd87639af8ce2c2c5b05e448a545f70b1e13862fe12fb4f3a95f24fef2b5"
+  },
+  "mean_by_pipeline": {
+    "signal": {
+      "precision": 0.2805300157464962,
+      "recall": 0.10066666666666667,
+      "f1": 0.14783504203075284,
+      "false_edges_per_1000_events": 14.63551401869159,
+      "selected_events": 2451.4,
+      "candidate_children": 2444.0,
+      "predicted": 1085,
+      "tp": 302,
+      "fp": 783
+    },
+    "context": {
+      "precision": 0.26815336296582787,
+      "recall": 0.112,
+      "f1": 0.15785408312331953,
+      "false_edges_per_1000_events": 17.327102803738317,
+      "selected_events": 2451.4,
+      "candidate_children": 2443.6,
+      "predicted": 1263,
+      "tp": 336,
+      "fp": 927
+    }
+  },
+  "paired_mean_delta": {
+    "precision": -0.012376652780668351,
+    "recall": 0.011333333333333334,
+    "f1": 0.010019041092566683,
+    "false_edges_per_1000_events": 2.6915887850467275
+  },
+  "limitations": [
+    "Same synthetic generator as development",
+    "Historical seed disjointness not independently verified",
+    "Gate calibration may shift under contextual selection",
+    "Per-test alert count is matched using unlabeled signal scores; not fixed probability threshold",
+    "Model comparison is not an operational deployment test"
+  ]
+}

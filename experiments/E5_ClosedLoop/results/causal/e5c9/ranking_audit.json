@@ -1,0 +1,29 @@
+{
+  "true_edges": 600,
+  "both_endpoints_detected": 222,
+  "true_parent_in_host_valid_candidates": 222,
+  "candidate_recall": 0.37,
+  "mean_true_parent_rank": 5.509009009009009,
+  "top_k": {
+    "1": {
+      "hits": 32,
+      "recall_all_edges": 0.05333333333333334,
+      "recall_among_reachable": 0.14414414414414414
+    },
+    "3": {
+      "hits": 99,
+      "recall_all_edges": 0.165,
+      "recall_among_reachable": 0.44594594594594594
+    },
+    "5": {
+      "hits": 120,
+      "recall_all_edges": 0.2,
+      "recall_among_reachable": 0.5405405405405406
+    },
+    "10": {
+      "hits": 194,
+      "recall_all_edges": 0.3233333333333333,
+      "recall_among_reachable": 0.8738738738738738
+    }
+  }
+}

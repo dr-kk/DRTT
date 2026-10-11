@@ -1,0 +1,87 @@
+{
+  "design": "Post-hoc descriptive paired seed analysis; no model selection",
+  "source": "results\\causal\\e5c32\\summary.json",
+  "source_sha256": "2e953178b0f541c9ebe5e88f67deb3cbe166cd77d64df319452f9a34a1c29818",
+  "dataset_ids": [
+    "seed_3100",
+    "seed_3101",
+    "seed_3102",
+    "seed_3103",
+    "seed_3104"
+  ],
+  "datasets": 5,
+  "pooled_baseline": {
+    "predicted": 3387,
+    "tp": 300,
+    "fp": 3087,
+    "fn": 2700,
+    "precision": 0.08857395925597875,
+    "recall": 0.1,
+    "f1": 0.09394081728511038,
+    "false_edges_per_1000_events": 57.700934579439256
+  },
+  "pooled_gate": {
+    "predicted": 1000,
+    "tp": 300,
+    "fp": 700,
+    "fn": 2700,
+    "precision": 0.3,
+    "recall": 0.1,
+    "f1": 0.15,
+    "false_edges_per_1000_events": 13.08411214953271
+  },
+  "paired_gate_minus_baseline": {
+    "precision": {
+      "n": 5,
+      "mean": 0.21080683640470232,
+      "sample_sd": 0.019207102873870018,
+      "descriptive_95pct_t_interval": [
+        0.18695806825642183,
+        0.23465560455298282
+      ],
+      "all_positive": true,
+      "all_negative": false
+    },
+    "recall": {
+      "n": 5,
+      "mean": 2.7755575615628915e-18,
+      "sample_sd": 0.0035355339059327407,
+      "descriptive_95pct_t_interval": [
+        -0.0043899451654254235,
+        0.004389945165425429
+      ],
+      "all_positive": false,
+      "all_negative": false
+    },
+    "f1": {
+      "n": 5,
+      "mean": 0.05553808379642624,
+      "sample_sd": 0.004502374515677933,
+      "descriptive_95pct_t_interval": [
+        0.04994764745387883,
+        0.06112852013897365
+      ],
+      "all_positive": true,
+      "all_negative": false
+    },
+    "false_edges_per_1000_events": {
+      "n": 5,
+      "mean": -44.61682242990654,
+      "sample_sd": 5.313394396614563,
+      "descriptive_95pct_t_interval": [
+        -51.21427296044047,
+        -38.019371899372615
+      ],
+      "all_positive": false,
+      "all_negative": true
+    }
+  },
+  "false_positive_reduction_fraction": 0.7732426303854876,
+  "notes": [
+    "Student-t intervals use five seed-level paired differences and df=4.",
+    "Intervals are descriptive; five synthetic realizations are not real-world validation.",
+    "The generator and test seed provenance are as documented in E5-C32.",
+    "This is a post-hoc analysis of previously viewed test results; do not use to select or tune models.",
+    "Precision and F1 intervals are in fractions; multiply by 100 for percentage points."
+  ]
+}

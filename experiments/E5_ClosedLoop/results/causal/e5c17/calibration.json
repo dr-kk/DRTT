@@ -1,0 +1,26 @@
+{
+  "method": "e5c17_score_rejection_v1",
+  "selection": "maximize transition F1 on calibration only",
+  "model_path": ".\\results\\causal\\e5c15\\reranker.pkl",
+  "calibration_events": 10700,
+  "calibration_candidate_children": 2420,
+  "calibration_true_edges": 600,
+  "selected_cutoff": 2.4413699479901254,
+  "calibration_performance": {
+    "cutoff": 2.4413699479901254,
+    "TP": 78,
+    "predicted": 713,
+    "precision": 0.1093969144460028,
+    "recall": 0.13,
+    "f1": 0.1188118811881188
+  },
+  "no_rejection_performance": {
+    "cutoff": -Infinity,
+    "TP": 124,
+    "predicted": 2420,
+    "precision": 0.0512396694214876,
+    "recall": 0.20666666666666667,
+    "f1": 0.08211920529801324
+  },
+  "calibration_truth_used": true
+}

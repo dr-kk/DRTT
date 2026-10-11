@@ -1,0 +1,18 @@
+{
+  "experiment": "E5-C70C",
+  "seeds": [
+    7001,
+    7002,
+    7003,
+    7004,
+    7005
+  ],
+  "control": "independent benign-marginal signal draws for all events",
+  "alert_budget": "fixed to original per-seed E5-C69 formula for both variants",
+  "train": "original E5-C15 train labels; frozen models and thresholds",
+  "note": "Synthetic generator robustness check; original seed set is reused from E5-C70B, not an independent confirmatory test",
+  "model_sha256": {
+    "ranker": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  }
+}

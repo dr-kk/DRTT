@@ -1,0 +1,8 @@
+{
+  "events": 10700,
+  "campaign_id_exposed": false,
+  "event_id_prefix_exposed": false,
+  "large_time_gaps_over_1000": 99,
+  "maximum_time_gap": 9672,
+  "note": "Blind IDs and no campaign_id, but synthetic time gaps still leak segmentation. Not publication-ready."
+}

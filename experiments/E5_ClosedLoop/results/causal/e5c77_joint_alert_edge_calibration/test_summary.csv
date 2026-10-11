@@ -1,0 +1,7 @@
+objective,split,detector,ranker,variant,alerts,edge_budget,seeds,truth,predicted,tp,fp,fn,precision,recall,pooled_f1,mean_alert_edge_ceiling
+balanced,test,OriginalOnly,HardNegative,original,1800,400,5,3000,2000,344,1656,2656,0.172,0.11466666666666667,0.1376,0.26866666666666666
+balanced,test,OriginalOnly,HardNegative,matched_signal,1800,400,5,3000,2000,64,1936,2936,0.032,0.021333333333333333,0.0256,0.054000000000000006
+worst_case,test,NoSignal,Frozen,original,1800,600,5,3000,3000,195,2805,2805,0.065,0.065,0.065,0.13233333333333333
+worst_case,test,NoSignal,Frozen,matched_signal,1800,600,5,3000,3000,139,2861,2861,0.04633333333333333,0.04633333333333333,0.04633333333333333,0.13233333333333333
+prespecified_control,test,OriginalOnly,Frozen,original,900,400,5,3000,2000,209,1791,2791,0.1045,0.06966666666666667,0.0836,0.121
+prespecified_control,test,OriginalOnly,Frozen,matched_signal,900,400,5,3000,2000,31,1969,2969,0.0155,0.010333333333333333,0.0124,0.019

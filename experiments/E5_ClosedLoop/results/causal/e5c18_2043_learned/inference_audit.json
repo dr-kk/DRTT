@@ -1,0 +1,10 @@
+{
+  "method": "logistic_pair_reranker_v1",
+  "events": 10700,
+  "predicted_positive_events": 2428,
+  "predicted_edges": 2421,
+  "threshold": 0.65,
+  "window": 90,
+  "ground_truth_used": false,
+  "tie_break": "score descending, gap ascending, event_id ascending"
+}

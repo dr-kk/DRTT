@@ -1,0 +1,385 @@
+﻿===== GENERATOR =====
+import argparse, csv, json, random
+from pathlib import Path
+
+EVENT_TYPES = ['connection','login','process_start','file_access','configuration_change','service_request']
+SENSORS = ['network','endpoint','authentication','application']
+HOSTS = [f'host{i:02d}' for i in range(1,21)]
+
+
+def write_csv(path, rows, fields):
+    with path.open('w', newline='', encoding='utf-8') as f:
+        w=csv.DictWriter(f, fieldnames=fields)
+        w.writeheader(); w.writerows(rows)
+
+
+def generate(seed, n_campaigns, duration, background_events):
+    rng=random.Random(seed)
+    raw=[]
+    # The hidden campaign identifier and attack stage exist only in private truth.
+    for c in range(n_campaigns):
+        start=rng.randint(100, duration-400)
+        hosts=rng.sample(HOSTS, 5)
+        t=start
+        parent=None
+        for stage in range(1,8):
+            t+=rng.randint(8,25)
+            src,dst=([hosts[0],hosts[1]] if stage<=2 else
+                     [hosts[1],hosts[2]] if stage<=4 else
+                     [hosts[2],hosts[3]] if stage<=6 else
+                     [hosts[3],hosts[4]])
+            internal=f'attack_{c}_{stage}'
+            raw.append(dict(internal=internal,t=t,src=src,dst=dst,
+                            sensor=rng.choice(SENSORS),etype=rng.choice(EVENT_TYPES),
+                            signal=round(max(0,min(1,rng.gauss(.68,.22))),5),
+                            malicious=1,stage=stage,campaign=c,parent=parent))
+            parent=internal
+    for b in range(background_events):
+        raw.append(dict(internal=f'benign_{b}',t=rng.randint(0,duration),
+                        src=rng.choice(HOSTS),dst=rng.choice(HOSTS),
+                        sensor=rng.choice(SENSORS),etype=rng.choice(EVENT_TYPES),
+                        signal=round(max(0,min(1,rng.gauss(.47,.22))),5),
+                        malicious=0,stage=0,campaign='',parent=None))
+    # Sort chronologically, then replace internal IDs with opaque sequential IDs.
+    # Note: monotone IDs are observable timestamps in disguise, not campaign identifiers.
+    raw.sort(key=lambda r:(r['t'],rng.random()))
+    idmap={r['internal']:f'EV{i:08d}' for i,r in enumerate(raw)}
+    telemetry=[]; truth=[]
+    for r in raw:
+        eid=idmap[r['internal']]
+        telemetry.append(dict(event_id=eid,timestamp=r['t'],source_host=r['src'],
+                              destination_host=r['dst'],sensor=r['sensor'],
+                              event_type=r['etype'],signal=r['signal']))
+        truth.append(dict(event_id=eid,malicious=r['malicious'],stage=r['stage'],
+                          campaign_id=r['campaign'],
+                          predecessor_event_id=idmap[r['parent']] if r['parent'] else ''))
+    return telemetry,truth
+
+
+def audit(telemetry,truth,n_campaigns):
+    assert len({r['event_id'] for r in telemetry})==len(telemetry)
+    assert set(telemetry[0])=={'event_id','timestamp','source_host','destination_host','sensor','event_type','signal'}
+    byid={r['event_id']:r for r in telemetry}
+    groups={}
+    for r in truth:
+        if r['malicious']:
+            groups.setdefault(r['campaign_id'],[]).append(r)
+            if r['predecessor_event_id']:
+                assert int(byid[r['predecessor_event_id']]['timestamp']) < int(byid[r['event_id']]['timestamp'])
+    assert len(groups)==n_campaigns and all(len(g)==7 for g in groups.values())
+    intervals=[(min(int(byid[r['event_id']]['timestamp']) for r in g),
+                max(int(byid[r['event_id']]['timestamp']) for r in g)) for g in groups.values()]
+    overlapping_pairs=sum(a[0]<=b[1] and b[0]<=a[1] for i,a in enumerate(intervals) for b in intervals[i+1:])
+    timestamps=sorted(int(r['timestamp']) for r in telemetry)
+    gaps=[b-a for a,b in zip(timestamps,timestamps[1:])]
+    return {'events':len(telemetry),'malicious_events':sum(r['malicious'] for r in truth),
+            'true_edges':sum(bool(r['predecessor_event_id']) for r in truth),
+            'overlapping_campaign_pairs':overlapping_pairs,
+            'maximum_timestamp_gap':max(gaps,default=0),
+            'observable_columns':list(telemetry[0]),
+            'note':'Synthetic correlated attacks; not executable causal response or independent real-world validation'}
+
+
+def main():
+    p=argparse.ArgumentParser()
+    p.add_argument('--output',default='data/causal/e5c5')
+    p.add_argument('--seed',type=int,default=2026)
+    p.add_argument('--campaigns',type=int,default=100)
+    p.add_argument('--duration',type=int,default=2400)
+    p.add_argument('--background',type=int,default=10000)
+    a=p.parse_args()
+    if a.duration<=400 or a.campaigns<2 or a.background<1:
+        p.error('duration must exceed 400, campaigns >= 2, background >= 1')
+    out=Path(a.output);out.mkdir(parents=True,exist_ok=True)
+    telemetry,truth=generate(a.seed,a.campaigns,a.duration,a.background)
+    report=audit(telemetry,truth,a.campaigns)
+    write_csv(out/'telemetry.csv',telemetry,list(telemetry[0]))
+    write_csv(out/'ground_truth.csv',truth,list(truth[0]))
+    (out/'audit.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+    print('E5-C5 | OVERLAPPING CAMPAIGN GENERATION')
+    print(json.dumps(report,indent=2))
+    print('Saved:',out.resolve())
+    if report['overlapping_campaign_pairs']==0:
+        raise RuntimeError('No campaign overlap observed; change parameters')
+
+if __name__=='__main__':main()
+===== FEATURE EXTRACTION =====
+"""E5-C38: frozen forensic reconstruction under matched alert budgets.
+Requires trusted local E5-C15 and E5-C31 pickle artifacts. Synthetic only.
+"""
+import argparse,csv,hashlib,json,pickle,sys
+from pathlib import Path
+from collections import defaultdict,deque
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+GATE_FEATURES=['best_score','score_margin','score_mean','score_std','log_candidate_count','best_gap_norm','best_parent_signal','child_signal','same_source','same_destination','dst_to_src','src_to_dst','same_sensor','same_type']
+
+def read(p):
+    with p.open(newline='',encoding='utf-8-sig') as f:return list(csv.DictReader(f))
+def digest(p):
+    h=hashlib.sha256()
+    with p.open('rb') as f:
+        for b in iter(lambda:f.read(1024*1024),b''):h.update(b)
+    return h.hexdigest()
+def extract(events,window):
+    ordered=sorted(events,key=lambda r:(int(r['timestamp']),r['event_id']))
+    history=deque();src=defaultdict(int);dst=defaultdict(int);pair=defaultdict(int);out={};i=0
+    while i<len(ordered):
+        t=int(ordered[i]['timestamp'])
+        while history and history[0][0]<t-window:
+            _,s,d=history.popleft();src[s]-=1;dst[d]-=1;pair[(s,d)]-=1
+        j=i
+        while j<len(ordered) and int(ordered[j]['timestamp'])==t:j+=1
+        for r in ordered[i:j]:
+            s,d=r['source_host'],r['destination_host']
+            out[r['event_id']]=[float(r['signal']),src[s],dst[d],pair[(s,d)]]
+        for r in ordered[i:j]:
+            s,d=r['source_host'],r['destination_host'];history.append((t,s,d));src[s]+=1;dst[d]+=1;pair[(s,d)]+=1
+        i=j
+    return out
+
+def top_predictions(events,chosen,ranker,gate,base,window):
+    # Replicate E5-C15 candidates, replacing only selection; never replace raw signal.
+    selected=sorted((r for r in events if r['event_id'] in chosen),key=lambda r:(int(r['timestamp']),r['event_id']))
+    out=[]; candidate_count=0
+    for j,child in enumerate(selected):
+        ct=int(child['timestamp']);entries=[]
+        for parent in reversed(selected[:j]):
+            gap=ct-int(parent['timestamp'])
+            if gap>window:break
+            if gap<=0:continue
+            if not (parent['destination_host']==child['source_host'] or parent['source_host']==child['source_host'] or parent['destination_host']==child['destination_host']):continue
+            entries.append((parent,gap))
+        entries.sort(key=lambda x:(x[1],x[0]['event_id']))
+        if not entries:continue
+        candidate_count+=1
+        vectors=[]
+        for ix,(p,gap) in enumerate(entries):
+            vec=[gap/90.,float(p['source_host']==child['source_host']),float(p['destination_host']==child['destination_host']),float(p['destination_host']==child['source_host']),float(p['source_host']==child['destination_host']),float(p['sensor']==child['sensor']),float(p['event_type']==child['event_type']),float(p['signal']),float(child['signal']),len(entries)/50.,ix/50.]
+            vectors.append(vec)
+        scores=np.asarray(ranker['model'].decision_function(np.asarray(vectors)),dtype=float).reshape(-1)
+        ranked=sorted(zip(entries,vectors,scores),key=lambda z:(-float(z[2]),z[0][1],z[0][0]['event_id']))
+        ((p,gap),vec,top)=ranked[0]
+        second=float(ranked[1][2]) if len(ranked)>1 else float(top)
+        x=[float(top),float(top)-second,float(np.mean(scores)),float(np.std(scores)),float(np.log1p(len(entries))),float(gap)/float(window),float(vec[7]),float(vec[8]),*map(float,vec[1:7])]
+        if len(x)!=len(GATE_FEATURES):raise RuntimeError('Gate feature dimension mismatch')
+        out.append((p['event_id'],child['event_id'],x))
+    if not out:return [],{'selected_events':len(selected),'candidate_children':candidate_count,'gate_probability_mean':None}
+    probs=gate['model'].predict_proba(np.asarray([r[2] for r in out]))[:,1]
+    kept=[(p,c) for (p,c,_),prob in zip(out,probs) if prob>=gate['cutoff']]
+    return kept,{'selected_events':len(selected),'candidate_children':candidate_count,'gate_probability_mean':float(np.mean(probs))}
+
+def metric(pred,truth,events):
+    tp=len(set(pred)&truth);n=len(pred);p=tp/n if n else 0.;r=tp/len(truth) if truth else 0.
+    return {'predicted':n,'tp':tp,'fp':n-tp,'precision':p,'recall':r,'f1':2*p*r/(p+r) if p+r else 0.,'false_edges_per_1000_events':(n-tp)*1000/len(events)}
+
+def main():
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--train',type=Path,default=Path('data/causal/e5c15_train'))
+    ap.add_argument('--calibration',type=Path,default=Path('data/causal/e5c17_calibration'))
+    ap.add_argument('--ranker',type=Path,required=True)
+    ap.add_argument('--gate',type=Path,default=Path('results/causal/e5c31/no_parent_gate.pkl'))
+    ap.add_argument('--output',type=Path,default=Path('results/causal/e5c38'))
+    ap.add_argument('--scripts',type=Path,default=Path('src/causal'))
+    ap.add_argument('--window',type=int,default=90)
+    args=ap.parse_args()
+    sys.path.insert(0,str(args.scripts.resolve()))
+    import e5c5_overlapping_generator as gen
+    import e5c15_reranker as base
+    with args.ranker.open('rb') as f:ranker=pickle.load(f)
+    with args.gate.open('rb') as f:gate=pickle.load(f)
+    if gate['e5c15_sha256']!=digest(args.ranker):raise ValueError('Frozen E5-C15 SHA256 mismatch')
+    if gate['features']!=GATE_FEATURES or ranker['features']!=base.FEATURES:raise ValueError('Feature schema mismatch')
+    if int(gate['window'])!=args.window or int(ranker['window'])!=args.window:raise ValueError('Window mismatch')
+    if float(gate['threshold'])!=.65 or float(ranker['threshold'])!=.65:raise ValueError('Unexpected original threshold')
+    tr=read(args.train/'telemetry.csv');ty={r['event_id']:int(r['malicious']) for r in read(args.train/'ground_truth.csv')}
+    ca=read(args.calibration/'telemetry.csv');cy={r['event_id']:int(r['malicious']) for r in read(args.calibration/'ground_truth.csv')}
+    tx=extract(tr,args.window);cx=extract(ca,args.window)
+    ids=[r['event_id'] for r in tr];X=np.asarray([tx[i] for i in ids]);y=np.asarray([ty[i] for i in ids])
+    model=make_pipeline(StandardScaler(),LogisticRegression(max_iter=2000,class_weight=None,random_state=0))
+    model.fit(X,y)
+    cids=[r['event_id'] for r in ca];cprobs=model.predict_proba(np.asarray([cx[i] for i in cids]))[:,1]
+    # Freeze calibration alert fraction based solely on original signal threshold .65.
+    budget=sum(float(r['signal'])>=.65 for r in ca)/len(ca)
+    # Exact alert count per test dataset, not test-label-dependent; rank probabilities deterministically.
+    output=args.output;output.mkdir(parents=True,exist_ok=True)
+    results=[];rows=[]
+    for seed in range(3800,3805):
+        events,truthrows=gen.generate(seed,100,2400,10000)
+        ids=[r['event_id'] for r in events];x=extract(events,args.window)
+        probs=model.predict_proba(np.asarray([x[i] for i in ids]))[:,1]
+        n=sum(float(r['signal'])>=.65 for r in events)
+        # Matching actual baseline alert count on each test realization is an oracle-free budget rule.
+        # It is not a pre-fixed probability cutoff; disclose that distinction.
+        ranked=sorted(zip(ids,probs),key=lambda v:(-float(v[1]),v[0]))
+        selected_context={i for i,_ in ranked[:n]}
+        selected_signal={r['event_id'] for r in events if float(r['signal'])>=.65}
+        truth={(r['predecessor_event_id'],r['event_id']) for r in truthrows if r['predecessor_event_id']}
+        for name,chosen in [('signal',selected_signal),('context',selected_context)]:
+            pred,audit=top_predictions(events,chosen,ranker,gate,base,args.window)
+            m=metric(pred,truth,events)
+            rows.append({'seed':seed,'pipeline':name,**m,**audit})
+        print(f'Seed {seed}: signal F1={rows[-2]["f1"]:.4f}, context F1={rows[-1]["f1"]:.4f}; alerts={n}')
+    import statistics as st
+    summary={}
+    for name in ('signal','context'):
+        rr=[r for r in rows if r['pipeline']==name]
+        summary[name]={k:float(st.mean(r[k] for r in rr)) for k in ('precision','recall','f1','false_edges_per_1000_events','selected_events','candidate_children')}
+        summary[name]['predicted']=sum(r['predicted'] for r in rr);summary[name]['tp']=sum(r['tp'] for r in rr);summary[name]['fp']=sum(r['fp'] for r in rr)
+    delta={k:summary['context'][k]-summary['signal'][k] for k in ('precision','recall','f1','false_edges_per_1000_events')}
+    with (output/'per_seed.csv').open('w',newline='',encoding='utf-8') as f:
+        w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+    report={'experiment':'E5-C38','scope':'fresh synthetic evaluation, no test-label tuning','seeds':list(range(3800,3805)),'generator':{'campaigns':100,'duration':2400,'background':10000},'alert_budget':'context selects top-N per test realization, N equals number of signal>=0.65 alerts (unlabeled budget matching)','calibration_signal_alert_fraction':budget,'gate_cutoff':gate['cutoff'],'model_sha256':{'ranker':digest(args.ranker),'gate':digest(args.gate)},'train_calibration_hashes':{'train_telemetry':digest(args.train/'telemetry.csv'),'calibration_telemetry':digest(args.calibration/'telemetry.csv')},'mean_by_pipeline':summary,'paired_mean_delta':delta,'limitations':['Same synthetic generator as development','Historical seed disjointness not independently verified','Gate calibration may shift under contextual selection','Per-test alert count is matched using unlabeled signal scores; not fixed probability threshold','Model comparison is not an operational deployment test']}
+    (output/'summary.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+    print('E5-C38 | FROZEN END-TO-END SYNTHETIC TEST')
+    print(json.dumps({'mean_by_pipeline':summary,'paired_mean_delta':delta},indent=2))
+    print('Saved:',output.resolve())
+if __name__=='__main__':main()
+===== CANDIDATE AND GATE =====
+"""E5-C58: train-only gate for frozen E5-C56; calibrate on E5-C17 only.
+No new-seed evaluation, no test-seed access, no overwriting existing results.
+Uses synthetic telemetry and trusted local pickle artifacts.
+"""
+import argparse,csv,hashlib,json,pickle,sys
+from pathlib import Path
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+GATE_FEATURES=['best_score','score_margin','score_mean','score_std','log_candidate_count','best_gap_norm','best_parent_signal','child_signal','same_source','same_destination','dst_to_src','src_to_dst','same_sensor','same_type']
+
+def sha(p):
+    h=hashlib.sha256()
+    with p.open('rb') as f:
+        for chunk in iter(lambda:f.read(1<<20),b''):h.update(chunk)
+    return h.hexdigest()
+
+def read(path):
+    with path.open(newline='',encoding='utf-8-sig') as f:return list(csv.DictReader(f))
+
+def write_csv(path,rows,fields=None):
+    if fields is None:fields=list(rows[0])
+    with path.open('w',newline='',encoding='utf-8') as f:
+        w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(rows)
+
+def top_rows(events,chosen,ranker,window):
+    """Replicate E5-C38/E5-C56 context candidates, with rank index starting at zero."""
+    selected=sorted((e for e in events if e['event_id'] in chosen),key=lambda e:(int(e['timestamp']),e['event_id']))
+    rows=[]
+    for j,child in enumerate(selected):
+        t=int(child['timestamp']);pairs=[]
+        for parent in reversed(selected[:j]):
+            gap=t-int(parent['timestamp'])
+            if gap>window:break
+            if gap<=0:continue
+            if not (parent['destination_host']==child['source_host'] or parent['source_host']==child['source_host'] or parent['destination_host']==child['destination_host']):continue
+            pairs.append((parent,gap))
+        pairs.sort(key=lambda z:(z[1],z[0]['event_id']))
+        if not pairs:continue
+        vec=[]
+        for i,(parent,gap) in enumerate(pairs):
+            vec.append([gap/90.,float(parent['source_host']==child['source_host']),float(parent['destination_host']==child['destination_host']),float(parent['destination_host']==child['source_host']),float(parent['source_host']==child['destination_host']),float(parent['sensor']==child['sensor']),float(parent['event_type']==child['event_type']),float(parent['signal']),float(child['signal']),len(pairs)/50.,i/50.])
+        x=np.asarray(vec,dtype=float)
+        if x.shape[1]!=11:raise ValueError('Candidate feature mismatch')
+        z=x if len(ranker['features'])==11 else x[:,:-1]
+        scores=np.asarray(ranker['model'].decision_function(z),dtype=float).reshape(-1)
+        order=sorted(range(len(pairs)),key=lambda i:(-float(scores[i]),pairs[i][1],pairs[i][0]['event_id']))
+        best=order[0];parent,gap=pairs[best];top=float(scores[best]);second=float(scores[order[1]]) if len(order)>1 else top
+        v=x[best]
+        features=[top,top-second,float(np.mean(scores)),float(np.std(scores)),float(np.log1p(len(pairs))),float(gap)/float(window),float(v[7]),float(v[8]),*map(float,v[1:7])]
+        if len(features)!=len(GATE_FEATURES):raise ValueError('Gate feature mismatch')
+        rows.append({'parent':parent['event_id'],'child':child['event_id'],'features':features})
+    return rows
+
+def truth_edges(path):
+    truth=read(path)
+    return {(r['predecessor_event_id'],r['event_id']) for r in truth if r['predecessor_event_id']}
+
+def metrics(rows,truth,keep):
+    selected=[r for r,k in zip(rows,keep) if k]
+    tp=sum((r['parent'],r['child']) in truth for r in selected)
+    n=len(selected);precision=tp/n if n else 0.;recall=tp/len(truth) if truth else 0.
+    return {'predicted':n,'tp':tp,'fp':n-tp,'precision':precision,'recall':recall,'f1':2*precision*recall/(precision+recall) if precision+recall else 0.}
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--ranker',type=Path,required=True)
+    p.add_argument('--retrained',type=Path,required=True)
+    p.add_argument('--gate',type=Path,required=True)
+    p.add_argument('--train',type=Path,default=Path('data/causal/e5c15_train'))
+    p.add_argument('--calibration',type=Path,default=Path('data/causal/e5c17_calibration'))
+    p.add_argument('--scripts',type=Path,default=Path('src/causal'))
+    p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--budget',type=float,default=1.5,help='Predeclared calibration alert budget, default 1.5x')
+    p.add_argument('--min-predictions',type=int,default=30)
+    a=p.parse_args()
+    if a.output.exists() and any(a.output.iterdir()):p.error('Output directory is nonempty; refusing overwrite')
+    if a.budget<=0 or a.min_predictions<1:p.error('Invalid budget or min-predictions')
+    sys.path.insert(0,str(a.scripts.resolve()))
+    import e5c15_reranker as base
+    import e5c38_end_to_end as c38
+    with a.ranker.open('rb') as f:baseline=pickle.load(f)
+    with a.retrained.open('rb') as f:proposed=pickle.load(f)
+    with a.gate.open('rb') as f:old_gate=pickle.load(f)
+    if baseline['features']!=base.FEATURES or proposed['features']!=base.FEATURES[:-1]:raise ValueError('Reranker feature schema mismatch')
+    if old_gate['features']!=GATE_FEATURES:raise ValueError('Gate feature schema mismatch')
+    if proposed.get('baseline_sha256')!=sha(a.ranker) or old_gate.get('e5c15_sha256')!=sha(a.ranker):raise ValueError('Model lineage mismatch')
+    if float(baseline['threshold'])!=.65 or int(baseline['window'])!=90 or int(proposed['window'])!=90:raise ValueError('Frozen settings mismatch')
+    for directory in (a.train,a.calibration):
+        for name in ('telemetry.csv','ground_truth.csv'):
+            if not (directory/name).is_file():p.error(f'Missing dataset file: {directory/name}')
+    train_events=read(a.train/'telemetry.csv');cal_events=read(a.calibration/'telemetry.csv')
+    train_truth=truth_edges(a.train/'ground_truth.csv');cal_truth=truth_edges(a.calibration/'ground_truth.csv')
+    # Gate fit: only original E5-C15 training split, signal-selected (no fitted detector selection leakage).
+    train_chosen={r['event_id'] for r in train_events if float(r['signal'])>=.65}
+    train_rows=top_rows(train_events,train_chosen,proposed,90)
+    y=np.asarray([int((r['parent'],r['child']) in train_truth) for r in train_rows],dtype=int)
+    if len(train_rows)<30 or len(set(y.tolist()))!=2:raise RuntimeError('Insufficient positive/negative gate training examples')
+    X=np.asarray([r['features'] for r in train_rows],dtype=float)
+    gate_model=LogisticRegression(max_iter=3000,class_weight='balanced',random_state=0)
+    gate_model.fit(X,y)
+    # Calibration: E5-C17 labels only. Detector fit on E5-C15 only.
+    train_labels={r['event_id']:int(r['malicious']) for r in read(a.train/'ground_truth.csv')}
+    ids=[r['event_id'] for r in train_events];feat=c38.extract(train_events,90)
+    detector=make_pipeline(StandardScaler(),LogisticRegression(max_iter=2000,class_weight=None,random_state=0))
+    detector.fit(np.asarray([feat[i] for i in ids]),np.asarray([train_labels[i] for i in ids]))
+    cids=[r['event_id'] for r in cal_events];cfeat=c38.extract(cal_events,90)
+    cp=detector.predict_proba(np.asarray([cfeat[i] for i in cids]))[:,1]
+    alert_n=min(len(cids),int(round(sum(float(r['signal'])>=.65 for r in cal_events)*a.budget)))
+    chosen={i for i,_ in sorted(zip(cids,cp),key=lambda z:(-float(z[1]),z[0]))[:alert_n]}
+    new_rows=top_rows(cal_events,chosen,proposed,90)
+    old_rows=top_rows(cal_events,chosen,baseline,90)
+    if not new_rows or len(new_rows)!=len(old_rows):raise RuntimeError('Inconsistent candidate children')
+    if [r['child'] for r in new_rows]!=[r['child'] for r in old_rows]:raise RuntimeError('Candidate child mismatch')
+    probs=gate_model.predict_proba(np.asarray([r['features'] for r in new_rows]))[:,1]
+    old_probs=old_gate['model'].predict_proba(np.asarray([r['features'] for r in old_rows]))[:,1]
+    # Threshold selection on E5-C17 only; no independent seeds accessed.
+    curve=[]
+    for cutoff in sorted(set(map(float,probs))):
+        keep=probs>=cutoff
+        if int(keep.sum())<a.min_predictions:continue
+        curve.append({'cutoff':cutoff,**metrics(new_rows,cal_truth,keep)})
+    if not curve:raise RuntimeError('No admissible calibration thresholds')
+    best=max(curve,key=lambda r:(r['f1'],r['precision'],r['cutoff']))
+    baseline_m=metrics(old_rows,cal_truth,old_probs>=old_gate['cutoff'])
+    new_m=metrics(new_rows,cal_truth,probs>=best['cutoff'])
+    a.output.mkdir(parents=True,exist_ok=True)
+    model_obj={'model':gate_model,'features':GATE_FEATURES,'cutoff':best['cutoff'],'e5c56_sha256':sha(a.retrained),'baseline_e5c15_sha256':sha(a.ranker),'threshold':.65,'window':90,'budget':a.budget,'calibration_dataset':'e5c17_calibration'}
+    with (a.output/'compatible_gate.pkl').open('wb') as f:pickle.dump(model_obj,f)
+    write_csv(a.output/'calibration_curve.csv',curve)
+    audit={'experiment':'E5-C58','status':'TRAINING + DEVELOPMENT CALIBRATION ONLY; no independent evaluation','train_gate_rows':len(train_rows),'train_correct_top1':int(y.sum()),'train_incorrect_top1':int(len(y)-y.sum()),'calibration_alerts':alert_n,'calibration_children':len(new_rows),'calibration_true_edges':len(cal_truth),'budget_multiplier':a.budget,'baseline':baseline_m,'proposed':new_m,'selected_cutoff':best['cutoff'],'min_predictions':a.min_predictions,'training_selection':'signal >=0.65; gate training labels from e5c15_train only','calibration_selection':'context detector fitted on training split; top N from E5-C17 telemetry','sha256':{'baseline_ranker':sha(a.ranker),'new_ranker':sha(a.retrained),'old_gate':sha(a.gate),'train_telemetry':sha(a.train/'telemetry.csv'),'train_truth':sha(a.train/'ground_truth.csv'),'cal_telemetry':sha(a.calibration/'telemetry.csv'),'cal_truth':sha(a.calibration/'ground_truth.csv')},'limitations':['Calibration F1 is in-sample and optimistic','Gate training signal-selected but calibration context-selected: distribution shift possible','Frozen original gate calibration may shift at budget 1.5x','Original reranker and new reranker can select different parents','Same synthetic generator, no real-world validation','No E5-C57 or other independent test seeds used']}
+    (a.output/'audit.json').write_text(json.dumps(audit,indent=2),encoding='utf-8')
+    print('E5-C58 | TRAIN-ONLY COMPATIBLE GATE + DEVELOPMENT CALIBRATION')
+    print(f'Train: {len(train_rows)} candidate children; correct top-1={int(y.sum())}; incorrect={int(len(y)-y.sum())}')
+    print(f'Calibration: alerts={alert_n} children={len(new_rows)} true_edges={len(cal_truth)} budget=x{a.budget:g}')
+    print('Baseline:',json.dumps(baseline_m))
+    print('Proposed:',json.dumps(new_m))
+    print(f'New gate cutoff: {best["cutoff"]:.8f}')
+    print('Saved:',a.output.resolve())
+    print('Do NOT claim independent improvement; reserve new seeds for E5-C59.')
+
+if __name__=='__main__':main()

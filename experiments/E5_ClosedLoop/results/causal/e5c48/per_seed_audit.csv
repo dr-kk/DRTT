@@ -1,0 +1,6 @@
+seed,retained_correct,rejected_correct,retained_false,rejected_false,baseline_tp,baseline_fp,filtered_tp,filtered_fp
+4700,52,8,124,56,60,180,52,124
+4701,55,12,133,45,67,178,55,133
+4702,53,11,132,42,64,174,53,132
+4703,64,10,147,65,74,212,64,147
+4704,59,7,125,54,66,179,59,125

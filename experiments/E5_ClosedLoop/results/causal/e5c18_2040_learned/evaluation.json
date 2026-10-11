@@ -1,0 +1,19 @@
+{
+  "event": {
+    "TP": 398,
+    "predicted": 2498,
+    "ground_truth": 700,
+    "precision": 0.15932746196957567,
+    "recall": 0.5685714285714286,
+    "f1": 0.24890556597873673
+  },
+  "transition": {
+    "TP": 121,
+    "predicted": 2492,
+    "ground_truth": 600,
+    "precision": 0.0485553772070626,
+    "recall": 0.20166666666666666,
+    "f1": 0.07826649417852523
+  },
+  "method": "logistic_pair_reranker_v1"
+}

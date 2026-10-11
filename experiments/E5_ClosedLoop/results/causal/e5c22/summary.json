@@ -1,0 +1,103 @@
+{
+  "design": "paired held-out synthetic test; calibration seed separate from test seed",
+  "calibration_seed": 2053,
+  "test_seed": 2054,
+  "calibration_episodes": 300,
+  "test_episodes": 500,
+  "calibration": {
+    "monitor_only": {
+      "threshold": 0.55,
+      "forensic_weight": 0.0,
+      "calibration_loss": 9.2
+    },
+    "isolate_only": {
+      "threshold": 0.75,
+      "forensic_weight": 0.0,
+      "calibration_loss": 6.266666666666667
+    },
+    "adaptive_no_forensics": {
+      "threshold": 0.85,
+      "forensic_weight": 0.0,
+      "calibration_loss": 6.569333333333334
+    },
+    "adaptive_with_forensics": {
+      "threshold": 0.85,
+      "forensic_weight": 0.3,
+      "calibration_loss": 6.140666666666666
+    }
+  },
+  "policies": {
+    "monitor_only": {
+      "attack_completion_rate": 1,
+      "false_isolation_rate": 0,
+      "mean_action_cost": 0.0,
+      "mean_utility_loss": 11.52,
+      "mean_preserved_evidence": 0,
+      "mean_decision_wall_ms": 0.0009804
+    },
+    "isolate_only": {
+      "attack_completion_rate": 0.19444444444444445,
+      "false_isolation_rate": 0.3490566037735849,
+      "mean_action_cost": 3.27,
+      "mean_utility_loss": 6.99,
+      "mean_preserved_evidence": 0,
+      "mean_decision_wall_ms": 0.000829
+    },
+    "adaptive_no_forensics": {
+      "attack_completion_rate": 0.3159722222222222,
+      "false_isolation_rate": 0.18867924528301888,
+      "mean_action_cost": 3.4936,
+      "mean_utility_loss": 7.9336,
+      "mean_preserved_evidence": 0.708,
+      "mean_decision_wall_ms": 0.0010452
+    },
+    "adaptive_with_forensics": {
+      "attack_completion_rate": 0.2222222222222222,
+      "false_isolation_rate": 0.2028301886792453,
+      "mean_action_cost": 3.8056,
+      "mean_utility_loss": 7.2256,
+      "mean_preserved_evidence": 0.684,
+      "mean_decision_wall_ms": 0.0009596
+    }
+  },
+  "paired_difference": {
+    "attack_completed": {
+      "mean": -0.09375,
+      "sample_sd": 0.29198795975367714,
+      "n": 288,
+      "nonzero_pairs": 27
+    },
+    "false_isolation": {
+      "mean": 0.014150943396226415,
+      "sample_sd": 0.11839261476685645,
+      "n": 212,
+      "nonzero_pairs": 3
+    },
+    "action_cost": {
+      "mean": 0.312,
+      "sample_sd": 1.0531068645376274,
+      "n": 500,
+      "nonzero_pairs": 102
+    },
+    "utility_loss": {
+      "mean": -0.708,
+      "sample_sd": 4.426973253179732,
+      "n": 500,
+      "nonzero_pairs": 102
+    },
+    "preserved_evidence": {
+      "mean": -0.024,
+      "sample_sd": 0.442510600169674,
+      "n": 500,
+      "nonzero_pairs": 60
+    }
+  },
+  "limitations": [
+    "Simulated event scores, not measured network traffic",
+    "Forensic feature is a verified temporal motif, not causal attack reconstruction",
+    "Ground truth appears only in private evaluation columns and simulator state",
+    "Action costs and loss weights are assumed, not measured",
+    "No trained RL/PPO and no operational incident-response latency",
+    "Single held-out seed; repeat independent seeds for uncertainty estimates"
+  ]
+}

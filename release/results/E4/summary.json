@@ -1,0 +1,192 @@
+{
+  "experiment": "E4 Telemetry-Dropout Robustness",
+  "campaigns_per_dropout": 100,
+  "dropout_levels": [
+    0,
+    0.1,
+    0.2,
+    0.3,
+    0.4
+  ],
+  "total_method_runs": 1000,
+  "scope": "controlled synthetic cyber-range benchmark",
+  "summary_by_dropout": [
+    {
+      "dropout": 0.0,
+      "method": "Static Defense",
+      "irt_mean": 11.300381007126518,
+      "irt_sd": 2.338984691663233,
+      "detection_rate_mean": 0.5957142857142858,
+      "detection_rate_sd": 0.16994912355464006,
+      "fpr_mean": 0.018256410256410255,
+      "fpr_sd": 0.0084789833749481,
+      "fra_mean": 0.5957142857142858,
+      "fra_sd": 0.16994912355464006,
+      "overhead_ms_per_event_mean": 0.0011633515738468817,
+      "overhead_ms_per_event_sd": 0.00023123549286983394
+    },
+    {
+      "dropout": 0.0,
+      "method": "DRTT-Full",
+      "irt_mean": 5.522213799191069,
+      "irt_sd": 1.7770555305673474,
+      "detection_rate_mean": 0.8314285714285714,
+      "detection_rate_sd": 0.12414207752110248,
+      "fpr_mean": 0.04748717948717948,
+      "fpr_sd": 0.015643509298776975,
+      "fra_mean": 0.9585714285714286,
+      "fra_sd": 0.07119731684692049,
+      "overhead_ms_per_event_mean": 0.06576103775269622,
+      "overhead_ms_per_event_sd": 0.006720916620579701
+    },
+    {
+      "dropout": 0.1,
+      "method": "Static Defense",
+      "irt_mean": 12.04798261457675,
+      "irt_sd": 3.00453688622116,
+      "detection_rate_mean": 0.5457142857142858,
+      "detection_rate_sd": 0.1715487794031132,
+      "fpr_mean": 0.018256410256410255,
+      "fpr_sd": 0.0084789833749481,
+      "fra_mean": 0.5457142857142858,
+      "fra_sd": 0.1715487794031132,
+      "overhead_ms_per_event_mean": 0.001321812234629193,
+      "overhead_ms_per_event_sd": 0.0005071474646789143
+    },
+    {
+      "dropout": 0.1,
+      "method": "DRTT-Full",
+      "irt_mean": 5.868382653989247,
+      "irt_sd": 2.1991351119168185,
+      "detection_rate_mean": 0.79,
+      "detection_rate_sd": 0.15120624044344674,
+      "fpr_mean": 0.04743589743589743,
+      "fpr_sd": 0.015519994873396087,
+      "fra_mean": 0.8928571428571428,
+      "fra_sd": 0.12246186285554664,
+      "overhead_ms_per_event_mean": 0.06988169876272188,
+      "overhead_ms_per_event_sd": 0.00961079581896259
+    },
+    {
+      "dropout": 0.2,
+      "method": "Static Defense",
+      "irt_mean": 12.910200284886061,
+      "irt_sd": 3.8754655814789754,
+      "detection_rate_mean": 0.47571428571428576,
+      "detection_rate_sd": 0.17235799038667743,
+      "fpr_mean": 0.018256410256410255,
+      "fpr_sd": 0.0084789833749481,
+      "fra_mean": 0.47571428571428576,
+      "fra_sd": 0.17235799038667743,
+      "overhead_ms_per_event_mean": 0.001160470583293309,
+      "overhead_ms_per_event_sd": 0.00020271152639946742
+    },
+    {
+      "dropout": 0.2,
+      "method": "DRTT-Full",
+      "irt_mean": 6.357285258285762,
+      "irt_sd": 2.6296746211281454,
+      "detection_rate_mean": 0.7057142857142855,
+      "detection_rate_sd": 0.16844444553227064,
+      "fpr_mean": 0.04723076923076922,
+      "fpr_sd": 0.015637989523643637,
+      "fra_mean": 0.8157142857142855,
+      "fra_sd": 0.1628125809264644,
+      "overhead_ms_per_event_mean": 0.06688824171092882,
+      "overhead_ms_per_event_sd": 0.006123653975069007
+    },
+    {
+      "dropout": 0.3,
+      "method": "Static Defense",
+      "irt_mean": 12.976066127828851,
+      "irt_sd": 4.131669819701757,
+      "detection_rate_mean": 0.45285714285714285,
+      "detection_rate_sd": 0.16377201825748838,
+      "fpr_mean": 0.018256410256410255,
+      "fpr_sd": 0.0084789833749481,
+      "fra_mean": 0.45285714285714285,
+      "fra_sd": 0.16377201825748838,
+      "overhead_ms_per_event_mean": 0.0012636559239854568,
+      "overhead_ms_per_event_sd": 0.00030106452081410937
+    },
+    {
+      "dropout": 0.3,
+      "method": "DRTT-Full",
+      "irt_mean": 6.499602255398835,
+      "irt_sd": 3.142270199239544,
+      "detection_rate_mean": 0.6557142857142856,
+      "detection_rate_sd": 0.16999763540135843,
+      "fpr_mean": 0.046923076923076915,
+      "fpr_sd": 0.01555418934034719,
+      "fra_mean": 0.7528571428571428,
+      "fra_sd": 0.17916064407187945,
+      "overhead_ms_per_event_mean": 0.0674496666333638,
+      "overhead_ms_per_event_sd": 0.005365020904631726
+    },
+    {
+      "dropout": 0.4,
+      "method": "Static Defense",
+      "irt_mean": 14.479817356584183,
+      "irt_sd": 6.5521585905165365,
+      "detection_rate_mean": 0.38714285714285707,
+      "detection_rate_sd": 0.16154148192140824,
+      "fpr_mean": 0.018256410256410255,
+      "fpr_sd": 0.0084789833749481,
+      "fra_mean": 0.38714285714285707,
+      "fra_sd": 0.16154148192140824,
+      "overhead_ms_per_event_mean": 0.0013653935718690906,
+      "overhead_ms_per_event_sd": 0.000346535818941461
+    },
+    {
+      "dropout": 0.4,
+      "method": "DRTT-Full",
+      "irt_mean": 7.567221686755808,
+      "irt_sd": 5.576388881969202,
+      "detection_rate_mean": 0.5657142857142856,
+      "detection_rate_sd": 0.19146927266474922,
+      "fpr_mean": 0.04661538461538461,
+      "fpr_sd": 0.01580358458232567,
+      "fra_mean": 0.65,
+      "fra_sd": 0.21332154420115876,
+      "overhead_ms_per_event_mean": 0.07351423763795797,
+      "overhead_ms_per_event_sd": 0.008070183834391521
+    }
+  ],
+  "drtt_vs_static": [
+    {
+      "dropout": 0.0,
+      "irt_reduction_pct": 51.13249902186026,
+      "detection_gain_pp": 23.571428571428566,
+      "fpr_change_pp": 2.9230769230769225,
+      "fra_gain_pp": 36.285714285714285
+    },
+    {
+      "dropout": 0.1,
+      "irt_reduction_pct": 51.29157435130142,
+      "detection_gain_pp": 24.428571428571423,
+      "fpr_change_pp": 2.9179487179487174,
+      "fra_gain_pp": 34.714285714285694
+    },
+    {
+      "dropout": 0.2,
+      "irt_reduction_pct": 50.75765582251873,
+      "detection_gain_pp": 22.999999999999975,
+      "fpr_change_pp": 2.897435897435897,
+      "fra_gain_pp": 33.99999999999997
+    },
+    {
+      "dropout": 0.3,
+      "irt_reduction_pct": 49.91084207362663,
+      "detection_gain_pp": 20.285714285714274,
+      "fpr_change_pp": 2.866666666666666,
+      "fra_gain_pp": 29.999999999999993
+    },
+    {
+      "dropout": 0.4,
+      "irt_reduction_pct": 47.7395225339988,
+      "detection_gain_pp": 17.857142857142854,
+      "fpr_change_pp": 2.835897435897435,
+      "fra_gain_pp": 26.285714285714295
+    }
+  ]
+}

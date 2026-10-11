@@ -1,0 +1,48 @@
+{
+  "experiment": "E5-C81",
+  "test_seeds": [
+    8101,
+    8102,
+    8103,
+    8104,
+    8105
+  ],
+  "detector_train_seeds": [
+    7601,
+    7602,
+    7603,
+    7604,
+    7605,
+    7606,
+    7607,
+    7608,
+    7609,
+    7610
+  ],
+  "alert_budget": 1800,
+  "edge_budget": 400,
+  "detector": "OriginalOnly",
+  "methods": [
+    "Frozen",
+    "HardNegative",
+    "RecentParent",
+    "HostHandoff",
+    "TemporalHost",
+    "SeededRandom"
+  ],
+  "model_sha256": {
+    "frozen": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "hard": "5f500d4969855b8338c42deae24e7ee1d99420ca8d8297fe77cc5802be64da7e",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05",
+    "new_gate": "3f236e51f812f50d1d3b11bd78bf9f079326d9674b1b16bb61b3d382d6bb55ff"
+  },
+  "limitations": [
+    "Synthetic-only",
+    "Baselines are deterministic heuristics, not state-of-the-art learned methods",
+    "All methods share alerts and compatible candidate pairs and predict at most one parent per child",
+    "Learned gates are trained/calibrated on different historical data than the heuristic acceptance scores",
+    "Matched-signal perturbation is generated using benign ground-truth labels",
+    "Fixed budgets were prespecified from E5-C77 validation; no test-time selection",
+    "No statistical confidence intervals; reserved for E5-C82"
+  ]
+}

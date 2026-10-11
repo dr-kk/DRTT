@@ -1,0 +1,48 @@
+{
+  "seed": 2050,
+  "episodes_per_policy": 100,
+  "policies": {
+    "monitor_only": {
+      "completion_rate": 1,
+      "mean_attacker_steps": 5,
+      "mean_path_switches": 0,
+      "mean_preserved_evidence": 0,
+      "mean_decision_wall_ms_per_episode": 0.0007790000000000001
+    },
+    "block_only": {
+      "completion_rate": 0.55,
+      "mean_attacker_steps": 4.29,
+      "mean_path_switches": 1.83,
+      "mean_preserved_evidence": 0,
+      "mean_decision_wall_ms_per_episode": 0.0008280000000000001
+    },
+    "isolate_only": {
+      "completion_rate": 0,
+      "mean_attacker_steps": 1.62,
+      "mean_path_switches": 0,
+      "mean_preserved_evidence": 0,
+      "mean_decision_wall_ms_per_episode": 0.00033600000000000004
+    },
+    "preserve_only": {
+      "completion_rate": 1,
+      "mean_attacker_steps": 5,
+      "mean_path_switches": 0,
+      "mean_preserved_evidence": 3.06,
+      "mean_decision_wall_ms_per_episode": 0.000961
+    },
+    "adaptive": {
+      "completion_rate": 0.17,
+      "mean_attacker_steps": 3.24,
+      "mean_path_switches": 1,
+      "mean_preserved_evidence": 0.53,
+      "mean_decision_wall_ms_per_episode": 0.000847
+    }
+  },
+  "limitations": [
+    "Stylized synthetic state machine, not real network attack execution",
+    "Wall time measures Python policy decision computation, not incident response time",
+    "Path identity is logged for evaluator but never provided to policy",
+    "Preserved evidence count is not forensic reconstruction accuracy",
+    "Actions are deterministic heuristics, not trained RL policies"
+  ]
+}

@@ -10,3 +10,24 @@ runs/
 *.pth
 *.ckpt
 *.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Temporary files
+*.bak
+*.tmp
+*.log
+
+# Generated datasets
+**/generated_data/
+
+# Local secrets
+.env
+.env.*
+*.pem
+*.key
+

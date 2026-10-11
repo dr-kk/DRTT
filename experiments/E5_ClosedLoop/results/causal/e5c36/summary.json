@@ -1,0 +1,26 @@
+{
+  "experiment": "E5-C36",
+  "scope": "development-only; exploratory; validation previously used in E5-C17/E5-C31",
+  "train": "data\\causal\\e5c15_train",
+  "validation": "data\\causal\\e5c17_calibration",
+  "window": 90,
+  "train_events": 10700,
+  "validation_events": 10700,
+  "models": {
+    "signal_only": {
+      "roc_auc": 0.7590541428571429,
+      "average_precision": 0.2088524978342205,
+      "log_loss": 0.2129847296239474
+    },
+    "signal_plus_context": {
+      "roc_auc": 0.7728285,
+      "average_precision": 0.22975414105934366,
+      "log_loss": 0.2092253902481558
+    }
+  },
+  "delta_context_minus_signal": {
+    "roc_auc": 0.01377435714285713,
+    "average_precision": 0.020901643225123168,
+    "log_loss": -0.0037593393757915927
+  }
+}

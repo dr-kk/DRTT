@@ -1,0 +1,17 @@
+{
+  "events": 10700,
+  "malicious_events": 700,
+  "true_edges": 600,
+  "overlapping_campaign_pairs": 546,
+  "maximum_timestamp_gap": 2,
+  "observable_columns": [
+    "event_id",
+    "timestamp",
+    "source_host",
+    "destination_host",
+    "sensor",
+    "event_type",
+    "signal"
+  ],
+  "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+}

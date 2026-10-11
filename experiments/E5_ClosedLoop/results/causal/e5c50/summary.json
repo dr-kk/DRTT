@@ -1,0 +1,104 @@
+{
+  "experiment": "E5-C50",
+  "scope": "frozen synthetic evaluation seeds 5000-5004; no test-based threshold tuning",
+  "decision_thresholds": {
+    "existing_gate": 0.7321456700388247,
+    "joint": 0.5
+  },
+  "manifest": [
+    {
+      "seed": 5000,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2441,
+      "candidate_children": 2433
+    },
+    {
+      "seed": 5001,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2467,
+      "candidate_children": 2458
+    },
+    {
+      "seed": 5002,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2485,
+      "candidate_children": 2476
+    },
+    {
+      "seed": 5003,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2467,
+      "candidate_children": 2459
+    },
+    {
+      "seed": 5004,
+      "events": 10700,
+      "truth_edges": 600,
+      "alerts": 2427,
+      "candidate_children": 2419
+    }
+  ],
+  "summary": {
+    "context_frozen_gate": {
+      "tp": 354,
+      "fp": 968,
+      "precision_pooled": 0.26777609682299547,
+      "recall_mean": 0.118,
+      "f1_mean": 0.16384594214620202,
+      "false_edges_per_1000_events_mean": 18.093457943925234
+    },
+    "context_joint_0_5": {
+      "tp": 115,
+      "fp": 149,
+      "precision_pooled": 0.4356060606060606,
+      "recall_mean": 0.03833333333333334,
+      "f1_mean": 0.07018123608605431,
+      "false_edges_per_1000_events_mean": 2.7850467289719623
+    }
+  },
+  "candidate_correctness": {
+    "existing_gate": {
+      "n": 12245,
+      "correct_top1": 650,
+      "prevalence": 0.053082890975908535,
+      "auroc": 0.8031496334626994,
+      "average_precision": 0.2826439857534791,
+      "brier": 0.16980260419735374,
+      "log_loss": 0.5180835954735142,
+      "mean_probability": 0.36409487736128676
+    },
+    "joint_logistic": {
+      "n": 12245,
+      "correct_top1": 650,
+      "prevalence": 0.053082890975908535,
+      "auroc": 0.8107412346170431,
+      "average_precision": 0.28605853369236395,
+      "brier": 0.04472771773347585,
+      "log_loss": 0.1722706766848933,
+      "mean_probability": 0.07664778496450976
+    }
+  },
+  "paired_aggregate": {
+    "delta_tp": -239,
+    "delta_fp": -819,
+    "delta_f1_mean": -0.0936647060601477
+  },
+  "sha256": {
+    "joint": "01e654649cb93f640b53e8594fa2dcbcba4264c17a7d65ccc5447974dd2d189a",
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5"
+  },
+  "limitations": [
+    "Only same-generator synthetic data; no real-world causal validation",
+    "Historical nonuse of seeds cannot be verified",
+    "Joint model trained on signal-selected but evaluated on context-selected candidates",
+    "0.50 is a prespecified default cutoff, not an optimized operating point",
+    "Ground truth used for labels and evaluation only, never inference features",
+    "Candidate rows within a seed are correlated; no independent per-event inference"
+  ]
+}

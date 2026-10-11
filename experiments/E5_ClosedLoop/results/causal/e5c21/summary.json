@@ -1,0 +1,73 @@
+{
+  "design": "paired synthetic intervention, identical exogenous seed/episode/step draws",
+  "seed": 2052,
+  "episodes_per_policy": 100,
+  "policies": {
+    "monitor_only": {
+      "completed": 1,
+      "attacker_steps": 5,
+      "path_switches": 0,
+      "preserved_evidence": 0,
+      "verified_artifacts": 4.23,
+      "action_cost": 0,
+      "decision_wall_ms": 0.000509
+    },
+    "isolate_only": {
+      "completed": 0,
+      "attacker_steps": 1.65,
+      "path_switches": 0,
+      "preserved_evidence": 0,
+      "verified_artifacts": 1.42,
+      "action_cost": 5,
+      "decision_wall_ms": 0.000269
+    },
+    "adaptive_no_forensics": {
+      "completed": 0.14,
+      "attacker_steps": 3.06,
+      "path_switches": 1,
+      "preserved_evidence": 0.23,
+      "verified_artifacts": 2.58,
+      "action_cost": 5.855,
+      "decision_wall_ms": 0.000553
+    },
+    "adaptive_with_forensics": {
+      "completed": 0.21,
+      "attacker_steps": 3.27,
+      "path_switches": 1.16,
+      "preserved_evidence": 0.24,
+      "verified_artifacts": 2.78,
+      "action_cost": 5.905,
+      "decision_wall_ms": 0.000557
+    }
+  },
+  "limitations": [
+    "Simplified state machine; not real attacker or network telemetry",
+    "Forensic feedback uses verified recent alerts, not reconstructed attack chains",
+    "SHA-256 digest is internally generated, not an external custody guarantee",
+    "Action costs are arbitrary illustrative units, not measured service disruption",
+    "Decision wall time is Python policy computation, not incident response time",
+    "Policies are hand-coded heuristics, not reinforcement learning"
+  ],
+  "paired_forensics_minus_no_forensics": {
+    "completed": {
+      "mean_difference": 0.07,
+      "sample_sd": 0.2564323999762428,
+      "nonzero_pairs": 7
+    },
+    "attacker_steps": {
+      "mean_difference": 0.21,
+      "sample_sd": 0.5373898759633259,
+      "nonzero_pairs": 16
+    },
+    "action_cost": {
+      "mean_difference": 0.05,
+      "sample_sd": 0.712443511849015,
+      "nonzero_pairs": 17
+    },
+    "preserved_evidence": {
+      "mean_difference": 0.01,
+      "sample_sd": 0.1,
+      "nonzero_pairs": 1
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "experiment": "E5-C48",
+  "scope": "post-hoc diagnostic on previously evaluated E5-C47 seeds; no tuning",
+  "threshold": 0.18926018798147812,
+  "counts": {
+    "retained_correct": 283,
+    "rejected_correct": 48,
+    "retained_false": 661,
+    "rejected_false": 262
+  },
+  "probability_distribution": {
+    "retained_correct": {
+      "n": 283,
+      "mean": 0.41259631217982046,
+      "median": 0.393852509040838,
+      "q10": 0.2325816887625311,
+      "q90": 0.6376242710427605
+    },
+    "rejected_correct": {
+      "n": 48,
+      "mean": 0.14120683673616555,
+      "median": 0.1505471966961187,
+      "q10": 0.08063988496658697,
+      "q90": 0.17751646601714535
+    },
+    "retained_false": {
+      "n": 661,
+      "mean": 0.38867579028395544,
+      "median": 0.3685261528559104,
+      "q10": 0.21970948763924186,
+      "q90": 0.5988577857753088
+    },
+    "rejected_false": {
+      "n": 262,
+      "mean": 0.11963859034124462,
+      "median": 0.12398922330990357,
+      "q10": 0.06140345278558049,
+      "q90": 0.17655393417631313
+    }
+  },
+  "rejected_false_fraction": 0.8451612903225807,
+  "true_edge_retention": 0.8549848942598187,
+  "sha256": {
+    "selection": "64215b3fc040a1e5f0e9c92434dd2446bb5d40b73748edfb0cf6519f4f39a233",
+    "models": "188e748c96744f30358be7010f92d931eaf72b542c4b65704741f031d93b8a8d",
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "reference": "7add484c86d552f01b19198bf76c3eacb2594ed5ffd585ac8c465c592c97ac99"
+  },
+  "limitations": [
+    "Same synthetic generator",
+    "Test seeds 4700-4704 already inspected: diagnostic only",
+    "Do not select thresholds from these results",
+    "No real-world forensic validation"
+  ]
+}

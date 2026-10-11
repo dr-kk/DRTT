@@ -1,0 +1,6 @@
+seed,delta_accepted_tp,delta_accepted_fp,delta_true_parent_available,delta_top1_correct
+3800,6,36,54,31
+3801,9,18,36,13
+3802,15,30,49,30
+3803,10,31,29,12
+3804,-6,29,10,-6

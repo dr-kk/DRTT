@@ -1,0 +1,13 @@
+variant,method,seeds,truth,predicted,tp,pooled_f1,bootstrap_ci95_low,bootstrap_ci95_high
+original,Frozen,5,3000,2000,317,0.1268,0.1184,0.1352
+original,HardNegative,5,3000,2000,319,0.1276,0.116,0.1392
+original,RecentParent,5,3000,2000,45,0.018,0.0156,0.0204
+original,HostHandoff,5,3000,2000,66,0.0264,0.0196,0.0364
+original,TemporalHost,5,3000,2000,139,0.0556,0.0496,0.0616
+original,SeededRandom,5,3000,2000,33,0.0132,0.0076,0.0184
+matched_signal,Frozen,5,3000,2000,61,0.0244,0.0216,0.0272
+matched_signal,HardNegative,5,3000,2000,61,0.0244,0.0216,0.0276
+matched_signal,RecentParent,5,3000,2000,7,0.0028,0.0012,0.0044
+matched_signal,HostHandoff,5,3000,2000,4,0.0016,0.0004,0.0028
+matched_signal,TemporalHost,5,3000,2000,13,0.0052,0.002,0.0084
+matched_signal,SeededRandom,5,3000,2000,3,0.0012,0.0,0.0028

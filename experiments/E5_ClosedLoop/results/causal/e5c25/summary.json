@@ -1,0 +1,86 @@
+{
+  "design": "frozen, telemetry-only E5-C13 versus trained E5-C17 with separate evaluation",
+  "datasets": [
+    {
+      "dataset": "data\\causal\\e5c18_2040",
+      "telemetry_sha256": "83b4efd8c66c60ebd4fb6d9b56c9606e2504485342dd503000493f82a38a5fb9",
+      "events": 10700,
+      "truth_edges": 600,
+      "reachable_edges_at_065_window90": 190
+    },
+    {
+      "dataset": "data\\causal\\e5c18_2041",
+      "telemetry_sha256": "a774dad1d7418bcf83694a1fc7ce29eb46be8500c8305095c209b2d1f73de280",
+      "events": 10700,
+      "truth_edges": 600,
+      "reachable_edges_at_065_window90": 171
+    },
+    {
+      "dataset": "data\\causal\\e5c18_2042",
+      "telemetry_sha256": "264e529f698144f4d6190fc83086eb37bd4b37419a339cb6deb063c1eaaa6435",
+      "events": 10700,
+      "truth_edges": 600,
+      "reachable_edges_at_065_window90": 189
+    },
+    {
+      "dataset": "data\\causal\\e5c18_2043",
+      "telemetry_sha256": "ace52f1163c883bd7e45cb1f452ca2aa6e9e61eeb258e74b132d456f4222e7c5",
+      "events": 10700,
+      "truth_edges": 600,
+      "reachable_edges_at_065_window90": 186
+    },
+    {
+      "dataset": "data\\causal\\e5c18_2044",
+      "telemetry_sha256": "fe81a80cf7a7c2c20831ae5fdb28c721b384719816593a64c8ec08c1237f3ad2",
+      "events": 10700,
+      "truth_edges": 600,
+      "reachable_edges_at_065_window90": 190
+    }
+  ],
+  "model": ".\\results\\causal\\e5c15\\reranker.pkl",
+  "calibration": ".\\results\\causal\\e5c17\\calibration.json",
+  "methods": {
+    "temporal_host": {
+      "precision": {
+        "mean": 0.007762665374032987,
+        "sample_sd": 0.0015083010674354475
+      },
+      "recall": {
+        "mean": 0.032,
+        "sample_sd": 0.006168918507773915
+      },
+      "f1": {
+        "mean": 0.012494124807927425,
+        "sample_sd": 0.0024230011644056273
+      },
+      "event_f1": {
+        "mean": 0.24471614334585118,
+        "sample_sd": 0.006433275985927222
+      }
+    },
+    "learned_rejection": {
+      "precision": {
+        "mean": 0.08741131950775428,
+        "sample_sd": 0.013174004708860397
+      },
+      "recall": {
+        "mean": 0.101,
+        "sample_sd": 0.00894427190999916
+      },
+      "f1": {
+        "mean": 0.09361469082052101,
+        "sample_sd": 0.011197434752118972
+      },
+      "event_f1": {
+        "mean": 0.24471614334585118,
+        "sample_sd": 0.006433275985927222
+      }
+    }
+  },
+  "limitations": [
+    "Reuses E5-C5 synthetic overlapping campaigns, not an independently realistic causal dataset",
+    "Frozen learned model and calibration must originate from disjoint development seeds",
+    "No causal-chain feedback to defender; no real network telemetry",
+    "Reachable-edge count is evaluation-only diagnostic and not a rigorous oracle for learned candidate schema"
+  ]
+}

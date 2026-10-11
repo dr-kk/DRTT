@@ -1,0 +1,84 @@
+{
+  "experiment": "E5-C79",
+  "train_seeds": [
+    7601,
+    7602,
+    7603,
+    7604,
+    7605,
+    7606,
+    7607,
+    7608,
+    7609,
+    7610
+  ],
+  "validation_seeds": [
+    7901,
+    7902,
+    7903
+  ],
+  "test_seeds": [
+    7904,
+    7905,
+    7906,
+    7907,
+    7908
+  ],
+  "policies": [
+    [
+      "ScoreOnly",
+      0.0,
+      0.0
+    ],
+    [
+      "TopologyWeak",
+      0.12,
+      0.0
+    ],
+    [
+      "TopologyStrong",
+      0.35,
+      0.0
+    ],
+    [
+      "Temporal",
+      0.0,
+      0.2
+    ],
+    [
+      "TopologyTemporal",
+      0.2,
+      0.15
+    ]
+  ],
+  "alert_grid": [
+    1300,
+    1800
+  ],
+  "edge_budget": 400,
+  "selected": {
+    "policy": "TopologyStrong",
+    "alerts": 1800,
+    "validation_mean_f1": 0.07966666666666666,
+    "validation_original_f1": 0.132,
+    "validation_matched_f1": 0.027333333333333334
+  },
+  "detector": "OriginalOnly",
+  "ranker": "HardNegative",
+  "gate": "E5-C75",
+  "input_sha256": {
+    "old": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "frozen": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05",
+    "hard": "5f500d4969855b8338c42deae24e7ee1d99420ca8d8297fe77cc5802be64da7e",
+    "new_gate": "3f236e51f812f50d1d3b11bd78bf9f079326d9674b1b16bb61b3d382d6bb55ff"
+  },
+  "limitations": [
+    "Synthetic-only",
+    "Matched-signal perturbation uses ground-truth benign labels to create evaluation distribution",
+    "Validation selected among four structure-aware variants; test compares only winner with same-budget score-only control",
+    "No new detector or gate training",
+    "Topology heuristic may favor dense benign neighborhoods",
+    "No confidence intervals; planned for E5-C82"
+  ]
+}

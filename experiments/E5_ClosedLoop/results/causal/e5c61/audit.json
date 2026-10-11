@@ -1,0 +1,21 @@
+{
+  "experiment": "E5-C61",
+  "status": "FROZEN DIAGNOSTIC; no fitting or tuning",
+  "seed_range": [
+    6000,
+    6004
+  ],
+  "reference_e5c60_sha256": "75f9b5ce092425ab0d8fd073d1fe66baf4a3070942d84c90da330c0e9476cbed",
+  "model_sha256": {
+    "baseline_ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "proposed_ranker": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "baseline_gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "proposed_gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "limitations": [
+    "Uses same E5-C60 seeds and scenarios; diagnostic only, not fresh independent validation",
+    "Candidate count measures parent ambiguity, not direct physical network density",
+    "Ranking and gate rejection are sequential error sources; counts are descriptive, not causal intervention estimates",
+    "Ground truth used only after frozen inference; no model selection"
+  ]
+}

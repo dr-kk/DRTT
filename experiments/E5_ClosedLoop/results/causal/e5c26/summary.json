@@ -1,0 +1,31 @@
+{
+  "datasets": 5,
+  "thresholds": [
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.65,
+    0.7,
+    0.8
+  ],
+  "window": 90.0,
+  "at_065": {
+    "true_edges": 3000,
+    "detection_lost_edges": 2074,
+    "time_window_lost_edges": 0,
+    "eligible_endpoint_time_edges": 926,
+    "optimistic_recall_ceiling": 0.30866666666666664,
+    "temporal_host_tp": 96,
+    "temporal_host_eligible_missed": 830,
+    "learned_rejection_tp": 303,
+    "learned_rejection_eligible_missed": 623
+  },
+  "limitations": [
+    "Offline evaluator accesses private ground truth; inference must not",
+    "Endpoint/time eligibility is an optimistic proxy, not complete candidate-generator reachability",
+    "Eligible missed edges combine candidate schema, ranking, and rejection losses; cannot distinguish them without candidate logs",
+    "Threshold sweep is diagnostic only; do not select a new threshold on these test seeds",
+    "All datasets are synthetic E5-C5 campaigns"
+  ]
+}

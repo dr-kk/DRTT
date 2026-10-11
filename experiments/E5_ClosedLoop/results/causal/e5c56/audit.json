@@ -1,0 +1,24 @@
+{
+  "experiment": "E5-C56",
+  "status": "development ranking audit only",
+  "baseline_sha256": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+  "train_telemetry_sha256": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+  "train_truth_sha256": "04ee0db0795bb3f77166d25f244cad4a7cc26271b76072bce96b330919d087ad",
+  "seeds": [
+    5200,
+    5201,
+    5202,
+    5203,
+    5204
+  ],
+  "budgets": [
+    1.0,
+    1.25,
+    1.5,
+    2.0,
+    3.0
+  ],
+  "feature_removed": "gap_rank",
+  "gate_reuse": "NOT VALIDATED: original gate trained on baseline score distribution; do not apply directly",
+  "independent_test": "NOT RUN; reserve untouched seeds for a separately frozen evaluation"
+}

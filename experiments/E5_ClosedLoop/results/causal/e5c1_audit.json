@@ -1,0 +1,11 @@
+{
+  "seed": 2026,
+  "campaigns": 100,
+  "events": 10700,
+  "attack_events": 700,
+  "benign_events": 10000,
+  "attack_stages_per_campaign": 7,
+  "causal_chains_verified": 100,
+  "forbidden_fields_exposed": [],
+  "status": "PASS"
+}

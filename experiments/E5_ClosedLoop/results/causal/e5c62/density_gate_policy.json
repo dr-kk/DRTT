@@ -1,0 +1,67 @@
+{
+  "experiment": "E5-C62",
+  "status": "DEVELOPMENT CALIBRATION ONLY; NOT INDEPENDENT TEST",
+  "selection_seeds": [
+    6200,
+    6201,
+    6202,
+    6203,
+    6204
+  ],
+  "development_check_seeds": [
+    6205,
+    6206,
+    6207,
+    6208,
+    6209
+  ],
+  "scenarios": {
+    "reference": [
+      100,
+      2400,
+      10000
+    ],
+    "background_half": [
+      100,
+      2400,
+      5000
+    ],
+    "background_double": [
+      100,
+      2400,
+      20000
+    ],
+    "duration_half": [
+      100,
+      1200,
+      10000
+    ],
+    "duration_double": [
+      100,
+      4800,
+      10000
+    ]
+  },
+  "density_boundary": 16,
+  "sparse_definition": "candidate_count <16",
+  "dense_definition": "candidate_count >=16",
+  "sparse_cutoff": 0.55,
+  "dense_cutoff": 0.8,
+  "original_global_cutoff": 0.7437635536351849,
+  "selection_objective": "macro-average scenario-level pooled edge F1",
+  "development_check_macro_f1_delta": 0.022999554578711,
+  "model_sha256": {
+    "baseline_ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "proposed_ranker": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "original_gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "compatible_gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "limitations": [
+    "No model fitting beyond reconstruction of the frozen detector on E5-C15 training data",
+    "Threshold selection uses ground truth on seeds 6200-6204; optimistic selection performance",
+    "Seeds 6205-6209 are development check only, not final independent test",
+    "Five conditions and 2D threshold search can overfit to synthetic generator family",
+    "Previously observed E5-C60 sparse failures motivated this hypothesis; E5-C63 must use untouched seeds",
+    "Candidate count is a proxy for ambiguity, not proof of causal density effects"
+  ]
+}

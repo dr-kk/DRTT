@@ -1,0 +1,27 @@
+{
+  "detected_children_with_truth_parent": 324,
+  "reachable_true_edges": 174,
+  "true_edge_features": {
+    "n": 174,
+    "gap_mean": 17.132,
+    "gap_median": 17.0,
+    "continuity_rate": 0.5,
+    "same_source_rate": 0.5,
+    "same_destination_rate": 0.5,
+    "same_sensor_rate": 0.2471,
+    "same_event_type_rate": 0.1782
+  },
+  "competing_false_edge_features": {
+    "n": 2665,
+    "gap_mean": 45.43,
+    "gap_median": 45,
+    "continuity_rate": 0.3816,
+    "same_source_rate": 0.3148,
+    "same_destination_rate": 0.334,
+    "same_sensor_rate": 0.2394,
+    "same_event_type_rate": 0.1797
+  },
+  "mean_competitors_per_reachable_child": 15.316,
+  "mean_fraction_false_with_larger_gap": 0.8201,
+  "warning": "Ground-truth-assisted exploratory audit, not a blind performance evaluation"
+}

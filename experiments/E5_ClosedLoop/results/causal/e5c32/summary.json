@@ -1,0 +1,325 @@
+{
+  "design": "One-time frozen E5-C17 versus E5-C31 evaluation on five synthetic seeds",
+  "manifest_sha256": "f43979af12e9611298b98a911e8553788302a75daf5e7cd9a01c7baf9567b37a",
+  "manifest": {
+    "design": "Fresh synthetic evaluation sets, no model fitting",
+    "generated_utc": "2026-10-10T13:51:09.932182+00:00",
+    "generator_path": "D:\\DRTT\\E5_ClosedLoop\\src\\causal\\e5c5_overlapping_generator.py",
+    "generator_sha256": "09d8534f922f59a87d7d82d99b492fbcf0acbd82b7034e7f5da189bd81bcaee5",
+    "parameters": {
+      "campaigns": 100,
+      "duration": 2400,
+      "background": 10000
+    },
+    "historical_seed_disjointness_verified": false,
+    "warning": "Researcher must verify these seeds were not used for model selection or earlier experiments; avoid examining labels until predictions are frozen.",
+    "datasets": [
+      {
+        "seed": 3100,
+        "folder": "seed_3100",
+        "audit": {
+          "events": 10700,
+          "malicious_events": 700,
+          "true_edges": 600,
+          "overlapping_campaign_pairs": 542,
+          "maximum_timestamp_gap": 3,
+          "observable_columns": [
+            "event_id",
+            "timestamp",
+            "source_host",
+            "destination_host",
+            "sensor",
+            "event_type",
+            "signal"
+          ],
+          "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+        },
+        "sha256": {
+          "telemetry.csv": "73fafb13bd1b120b1c42389c1cb23b9750e425d6f94c7c4dbbe08bf5d2ef7779",
+          "ground_truth.csv": "225d10815e793a0d08b59cafce4c2e04b7637b76e42e33bd0830965595f85f45",
+          "audit.json": "6927d0c9a6dd82a6bc5c7b8affe87e8a2c08229d89c3e308dee8b22872068390"
+        }
+      },
+      {
+        "seed": 3101,
+        "folder": "seed_3101",
+        "audit": {
+          "events": 10700,
+          "malicious_events": 700,
+          "true_edges": 600,
+          "overlapping_campaign_pairs": 481,
+          "maximum_timestamp_gap": 2,
+          "observable_columns": [
+            "event_id",
+            "timestamp",
+            "source_host",
+            "destination_host",
+            "sensor",
+            "event_type",
+            "signal"
+          ],
+          "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+        },
+        "sha256": {
+          "telemetry.csv": "4287396b002ee3884750bc993b7ec7d734e62fae20e2b30d56d577f41d575f67",
+          "ground_truth.csv": "ab50fa4b86bd4e45a43920a870b40e727fb2244c714e97501b02c2c690617e8d",
+          "audit.json": "092409c5b3524ac1f255b8d54b282429ed5e6810d6bf8470b3ce07cc1f5f0031"
+        }
+      },
+      {
+        "seed": 3102,
+        "folder": "seed_3102",
+        "audit": {
+          "events": 10700,
+          "malicious_events": 700,
+          "true_edges": 600,
+          "overlapping_campaign_pairs": 479,
+          "maximum_timestamp_gap": 2,
+          "observable_columns": [
+            "event_id",
+            "timestamp",
+            "source_host",
+            "destination_host",
+            "sensor",
+            "event_type",
+            "signal"
+          ],
+          "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+        },
+        "sha256": {
+          "telemetry.csv": "6d3aa96822cb41d1730708ea09fb7e55b604ab1161c5092736a60a47f1f5caa9",
+          "ground_truth.csv": "a87dce103613b673a9511750bcc97131dc7994349c722598c068e3adfdc35070",
+          "audit.json": "31fdc54c50271cb92d2debf7a6c0aa8d6e7d63b66aef2bd2145afb49b6418441"
+        }
+      },
+      {
+        "seed": 3103,
+        "folder": "seed_3103",
+        "audit": {
+          "events": 10700,
+          "malicious_events": 700,
+          "true_edges": 600,
+          "overlapping_campaign_pairs": 508,
+          "maximum_timestamp_gap": 2,
+          "observable_columns": [
+            "event_id",
+            "timestamp",
+            "source_host",
+            "destination_host",
+            "sensor",
+            "event_type",
+            "signal"
+          ],
+          "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+        },
+        "sha256": {
+          "telemetry.csv": "d64997fe01de530c44dfbe11858c62aebf85c0358d689f27c0a156483cda030d",
+          "ground_truth.csv": "e564d25b2a9a88c7d38cbc0086026d6bfb0f8c43dfe678d04ee249047c732588",
+          "audit.json": "e783fd407ca64a1014c719cc6c45bf7c91d34a3d9e06abc762f90a93a7a1e9fd"
+        }
+      },
+      {
+        "seed": 3104,
+        "folder": "seed_3104",
+        "audit": {
+          "events": 10700,
+          "malicious_events": 700,
+          "true_edges": 600,
+          "overlapping_campaign_pairs": 509,
+          "maximum_timestamp_gap": 2,
+          "observable_columns": [
+            "event_id",
+            "timestamp",
+            "source_host",
+            "destination_host",
+            "sensor",
+            "event_type",
+            "signal"
+          ],
+          "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+        },
+        "sha256": {
+          "telemetry.csv": "cd3f82ad80b38c34175e1b1d1d529683e49c06b25f3f1dd54d56590ac545c31c",
+          "ground_truth.csv": "14c114974e470f87ee1468f8709461ae66214701711fd71cfbd3aa9d9c72e63d",
+          "audit.json": "be262ff3f23b434a5a7a6b99b0780b75c0bdd203ae887ac02f4fd41c5ce01bd0"
+        }
+      }
+    ]
+  },
+  "ranker_sha256": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+  "gate_sha256": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+  "baseline_calibration_sha256": "3dda05caba6c98ae45a3c62807fc65bc047a87c873c452639bc152a147288e84",
+  "baseline_cutoff": 2.4413699479901254,
+  "gate_cutoff": 0.7321456700388247,
+  "datasets": 5,
+  "total_events": 53500,
+  "total_truth_edges": 3000,
+  "baseline": {
+    "predicted": 3387,
+    "tp": 300,
+    "fp": 3087,
+    "fn": 2700,
+    "precision": 0.08857395925597875,
+    "recall": 0.1,
+    "f1": 0.09394081728511038,
+    "false_edges_per_1000_events": 57.700934579439256
+  },
+  "gate": {
+    "predicted": 1000,
+    "tp": 300,
+    "fp": 700,
+    "fn": 2700,
+    "precision": 0.3,
+    "recall": 0.1,
+    "f1": 0.15,
+    "false_edges_per_1000_events": 13.08411214953271
+  },
+  "per_dataset": [
+    {
+      "dataset": "seed_3100",
+      "events": 10700,
+      "truth_edges": 600,
+      "candidate_children": 2430,
+      "baseline": {
+        "predicted": 614,
+        "tp": 72,
+        "fp": 542,
+        "fn": 528,
+        "precision": 0.11726384364820847,
+        "recall": 0.12,
+        "f1": 0.1186161449752883,
+        "false_edges_per_1000_events": 50.654205607476634
+      },
+      "gate": {
+        "predicted": 223,
+        "tp": 73,
+        "fp": 150,
+        "fn": 527,
+        "precision": 0.3273542600896861,
+        "recall": 0.12166666666666667,
+        "f1": 0.17739975698663427,
+        "false_edges_per_1000_events": 14.018691588785046
+      },
+      "telemetry_sha256": "73fafb13bd1b120b1c42389c1cb23b9750e425d6f94c7c4dbbe08bf5d2ef7779",
+      "truth_sha256": "225d10815e793a0d08b59cafce4c2e04b7637b76e42e33bd0830965595f85f45"
+    },
+    {
+      "dataset": "seed_3101",
+      "events": 10700,
+      "truth_edges": 600,
+      "candidate_children": 2421,
+      "baseline": {
+        "predicted": 713,
+        "tp": 56,
+        "fp": 657,
+        "fn": 544,
+        "precision": 0.0785413744740533,
+        "recall": 0.09333333333333334,
+        "f1": 0.0853008377760853,
+        "false_edges_per_1000_events": 61.401869158878505
+      },
+      "gate": {
+        "predicted": 214,
+        "tp": 56,
+        "fp": 158,
+        "fn": 544,
+        "precision": 0.2616822429906542,
+        "recall": 0.09333333333333334,
+        "f1": 0.1375921375921376,
+        "false_edges_per_1000_events": 14.766355140186915
+      },
+      "telemetry_sha256": "4287396b002ee3884750bc993b7ec7d734e62fae20e2b30d56d577f41d575f67",
+      "truth_sha256": "ab50fa4b86bd4e45a43920a870b40e727fb2244c714e97501b02c2c690617e8d"
+    },
+    {
+      "dataset": "seed_3102",
+      "events": 10700,
+      "truth_edges": 600,
+      "candidate_children": 2469,
+      "baseline": {
+        "predicted": 661,
+        "tp": 57,
+        "fp": 604,
+        "fn": 543,
+        "precision": 0.08623298033282904,
+        "recall": 0.095,
+        "f1": 0.09040444091990484,
+        "false_edges_per_1000_events": 56.44859813084112
+      },
+      "gate": {
+        "predicted": 193,
+        "tp": 60,
+        "fp": 133,
+        "fn": 540,
+        "precision": 0.31088082901554404,
+        "recall": 0.1,
+        "f1": 0.15132408575031525,
+        "false_edges_per_1000_events": 12.429906542056075
+      },
+      "telemetry_sha256": "6d3aa96822cb41d1730708ea09fb7e55b604ab1161c5092736a60a47f1f5caa9",
+      "truth_sha256": "a87dce103613b673a9511750bcc97131dc7994349c722598c068e3adfdc35070"
+    },
+    {
+      "dataset": "seed_3103",
+      "events": 10700,
+      "truth_edges": 600,
+      "candidate_children": 2435,
+      "baseline": {
+        "predicted": 728,
+        "tp": 57,
+        "fp": 671,
+        "fn": 543,
+        "precision": 0.0782967032967033,
+        "recall": 0.095,
+        "f1": 0.0858433734939759,
+        "false_edges_per_1000_events": 62.71028037383178
+      },
+      "gate": {
+        "predicted": 177,
+        "tp": 55,
+        "fp": 122,
+        "fn": 545,
+        "precision": 0.3107344632768362,
+        "recall": 0.09166666666666666,
+        "f1": 0.14157014157014158,
+        "false_edges_per_1000_events": 11.401869158878505
+      },
+      "telemetry_sha256": "d64997fe01de530c44dfbe11858c62aebf85c0358d689f27c0a156483cda030d",
+      "truth_sha256": "e564d25b2a9a88c7d38cbc0086026d6bfb0f8c43dfe678d04ee249047c732588"
+    },
+    {
+      "dataset": "seed_3104",
+      "events": 10700,
+      "truth_edges": 600,
+      "candidate_children": 2392,
+      "baseline": {
+        "predicted": 671,
+        "tp": 58,
+        "fp": 613,
+        "fn": 542,
+        "precision": 0.08643815201192251,
+        "recall": 0.09666666666666666,
+        "f1": 0.09126671911880409,
+        "false_edges_per_1000_events": 57.28971962616822
+      },
+      "gate": {
+        "predicted": 193,
+        "tp": 56,
+        "fp": 137,
+        "fn": 544,
+        "precision": 0.29015544041450775,
+        "recall": 0.09333333333333334,
+        "f1": 0.14123581336696092,
+        "false_edges_per_1000_events": 12.80373831775701
+      },
+      "telemetry_sha256": "cd3f82ad80b38c34175e1b1d1d529683e49c06b25f3f1dd54d56590ac545c31c",
+      "truth_sha256": "14c114974e470f87ee1468f8709461ae66214701711fd71cfbd3aa9d9c72e63d"
+    }
+  ],
+  "limitations": [
+    "Synthetic correlated events, not verified real causal chains",
+    "Historical seed disjointness not independently verified",
+    "Test labels used only after frozen predictions for evaluation",
+    "Do not tune model or cutoffs using these results"
+  ]
+}

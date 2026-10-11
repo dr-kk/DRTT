@@ -1,0 +1,33 @@
+{
+  "experiment": "E5-C85",
+  "seeds": [
+    8501,
+    8502,
+    8503,
+    8504,
+    8505,
+    8506,
+    8507,
+    8508,
+    8509,
+    8510
+  ],
+  "alerts": 1800,
+  "edges": 400,
+  "perturbation": "Replace benign source/destination host pairs by seeded samples from the attack host-pair marginal; leave all attack events, timestamps, event IDs, sensors, types, signals and truth unchanged",
+  "provenance": "Truth-informed stress construction; truth not passed to detector/ranker/gate inference",
+  "model_sha256": {
+    "frozen": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "hard": "5f500d4969855b8338c42deae24e7ee1d99420ca8d8297fe77cc5802be64da7e",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05",
+    "new_gate": "3f236e51f812f50d1d3b11bd78bf9f079326d9674b1b16bb61b3d382d6bb55ff"
+  },
+  "limitations": [
+    "Synthetic-only; no retraining",
+    "Attack host pairs used to construct counterfactual: label-informed evaluation",
+    "Not a generator retrained with attack/benign shared-host distributions",
+    "Attack host pairs unchanged; benign traffic distribution shifted",
+    "Host-compatible reachable edges and selected alerts may change",
+    "Descriptive ten-seed paired analysis; no formal significance claim"
+  ]
+}

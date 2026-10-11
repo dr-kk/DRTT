@@ -1,0 +1,13 @@
+gap_bucket,host_relation,total,correct,retained,retained_correct
+0-2,dst_to_src,201,0,116,0
+0-2,same_destination,33,0,0,0
+0-2,same_source,27,0,17,0
+11-30,dst_to_src,760,26,132,0
+11-30,same_destination,46,0,0,0
+11-30,same_source,169,69,118,60
+3-10,dst_to_src,609,11,147,0
+3-10,same_destination,71,0,0,0
+3-10,same_source,100,18,68,18
+31-90,dst_to_src,348,0,115,0
+31-90,same_destination,1,0,0,0
+31-90,same_source,55,0,0,0

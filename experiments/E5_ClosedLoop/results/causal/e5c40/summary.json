@@ -1,0 +1,171 @@
+{
+  "experiment": "E5-C40",
+  "scope": "Post-hoc descriptive audit of previously evaluated synthetic E5-C38/E5-C39 seeds; no tuning",
+  "input": "results\\causal\\e5c39\\candidate_diagnostics.csv",
+  "seeds": [
+    "3800",
+    "3801",
+    "3802",
+    "3803",
+    "3804"
+  ],
+  "pipelines": {
+    "context": {
+      "candidate_children": 12218,
+      "true_parent_available": 1085,
+      "top1_correct": 613,
+      "accepted": 1263,
+      "accepted_tp": 336,
+      "accepted_fp": 927,
+      "gate_prob_mean": 0.3596062316242522,
+      "gate_prob_mean_accepted": 0.8283394657986786,
+      "gate_prob_mean_correct_top1": 0.6546200618173337,
+      "gate_prob_mean_wrong_top1": 0.34402299354511745,
+      "accepted_precision": 0.2660332541567696,
+      "validity_groups": {
+        "no_true_parent_candidate": {
+          "candidate_children": 11133,
+          "true_parent_available": 0,
+          "top1_correct": 0,
+          "accepted": 859,
+          "accepted_tp": 0,
+          "accepted_fp": 859,
+          "gate_prob_mean": 0.33870844490154794,
+          "gate_prob_mean_accepted": 0.8167709973329407,
+          "gate_prob_mean_correct_top1": null,
+          "gate_prob_mean_wrong_top1": 0.33870844490154794,
+          "accepted_precision": 0.0
+        },
+        "wrong_top1_with_true_candidate": {
+          "candidate_children": 472,
+          "true_parent_available": 472,
+          "top1_correct": 0,
+          "accepted": 68,
+          "accepted_tp": 0,
+          "accepted_fp": 68,
+          "gate_prob_mean": 0.4693765317842265,
+          "gate_prob_mean_accepted": 0.8545041715307778,
+          "gate_prob_mean_correct_top1": null,
+          "gate_prob_mean_wrong_top1": 0.4693765317842265,
+          "accepted_precision": 0.0
+        },
+        "top1_correct": {
+          "candidate_children": 613,
+          "true_parent_available": 613,
+          "top1_correct": 613,
+          "accepted": 336,
+          "accepted_tp": 336,
+          "accepted_fp": 0,
+          "gate_prob_mean": 0.6546200618173337,
+          "gate_prob_mean_accepted": 0.8526195682459585,
+          "gate_prob_mean_correct_top1": 0.6546200618173337,
+          "gate_prob_mean_wrong_top1": null,
+          "accepted_precision": 1.0
+        }
+      }
+    },
+    "signal": {
+      "candidate_children": 12220,
+      "true_parent_available": 907,
+      "top1_correct": 533,
+      "accepted": 1085,
+      "accepted_tp": 302,
+      "accepted_fp": 783,
+      "gate_prob_mean": 0.34235290787638356,
+      "gate_prob_mean_accepted": 0.8281476466789398,
+      "gate_prob_mean_correct_top1": 0.6646011983884321,
+      "gate_prob_mean_wrong_top1": 0.32765637849819224,
+      "accepted_precision": 0.2783410138248848,
+      "validity_groups": {
+        "no_true_parent_candidate": {
+          "candidate_children": 11313,
+          "true_parent_available": 0,
+          "top1_correct": 0,
+          "accepted": 737,
+          "accepted_tp": 0,
+          "accepted_fp": 737,
+          "gate_prob_mean": 0.3232463032524278,
+          "gate_prob_mean_accepted": 0.8170999239463413,
+          "gate_prob_mean_correct_top1": null,
+          "gate_prob_mean_wrong_top1": 0.3232463032524278,
+          "accepted_precision": 0.0
+        },
+        "wrong_top1_with_true_candidate": {
+          "candidate_children": 374,
+          "true_parent_available": 374,
+          "top1_correct": 0,
+          "accepted": 46,
+          "accepted_tp": 0,
+          "accepted_fp": 46,
+          "gate_prob_mean": 0.4610552588600445,
+          "gate_prob_mean_accepted": 0.8559922069682712,
+          "gate_prob_mean_correct_top1": null,
+          "gate_prob_mean_wrong_top1": 0.4610552588600445,
+          "accepted_precision": 0.0
+        },
+        "top1_correct": {
+          "candidate_children": 533,
+          "true_parent_available": 533,
+          "top1_correct": 533,
+          "accepted": 302,
+          "accepted_tp": 302,
+          "accepted_fp": 0,
+          "gate_prob_mean": 0.6646011983884321,
+          "gate_prob_mean_accepted": 0.8508672555551512,
+          "gate_prob_mean_correct_top1": 0.6646011983884321,
+          "gate_prob_mean_wrong_top1": null,
+          "accepted_precision": 1.0
+        }
+      }
+    }
+  },
+  "paired_differences": [
+    {
+      "seed": "3800",
+      "delta_accepted_tp": 6,
+      "delta_accepted_fp": 36,
+      "delta_true_parent_available": 54,
+      "delta_top1_correct": 31
+    },
+    {
+      "seed": "3801",
+      "delta_accepted_tp": 9,
+      "delta_accepted_fp": 18,
+      "delta_true_parent_available": 36,
+      "delta_top1_correct": 13
+    },
+    {
+      "seed": "3802",
+      "delta_accepted_tp": 15,
+      "delta_accepted_fp": 30,
+      "delta_true_parent_available": 49,
+      "delta_top1_correct": 30
+    },
+    {
+      "seed": "3803",
+      "delta_accepted_tp": 10,
+      "delta_accepted_fp": 31,
+      "delta_true_parent_available": 29,
+      "delta_top1_correct": 12
+    },
+    {
+      "seed": "3804",
+      "delta_accepted_tp": -6,
+      "delta_accepted_fp": 29,
+      "delta_true_parent_available": 10,
+      "delta_top1_correct": -6
+    }
+  ],
+  "definitions": {
+    "true_parent_available": "True predecessor is in candidate set; stage-one and benign events have no true predecessor",
+    "top1_correct": "Frozen reranker selected exact true predecessor",
+    "accepted_tp": "Gate accepted exact true predecessor",
+    "gate_probability": "Model-estimated top1 correctness, not calibrated causal certainty"
+  },
+  "limitations": [
+    "Test labels used for diagnostics only",
+    "Bins are descriptive, not recalibration",
+    "Same synthetic generator across seeds",
+    "No causal or operational validity inferred"
+  ]
+}

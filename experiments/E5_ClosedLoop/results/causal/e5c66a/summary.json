@@ -1,0 +1,21 @@
+{
+  "experiment": "E5-C66A",
+  "method": "Pareto dominance evaluated only within feasible E5-C66 grid points",
+  "source_grid": "results\\causal\\e5c66\\threshold_grid.csv",
+  "total_grid_points": 784,
+  "feasible_grid_points": 41,
+  "constrained_pareto_points": 17,
+  "best_feasible_by_macro_f1": {
+    "sparse_cutoff": "0.725",
+    "dense_cutoff": "0.8",
+    "macro_f1": "0.16105980268437198",
+    "macro_recall": "0.13838095238095235",
+    "total_fp": "14995",
+    "total_tp": "2950",
+    "feasible": "1",
+    "reference_f1": "0.19414613602863762",
+    "max_fp_ratio": "1.0714285714285714",
+    "pareto": "0"
+  },
+  "status": "DEVELOPMENT POSTPROCESSING ONLY; NOT AN INDEPENDENT VALIDATION"
+}

@@ -1,0 +1,77 @@
+{
+  "experiment": "E5-C80",
+  "test_seeds": [
+    8001,
+    8002,
+    8003,
+    8004,
+    8005
+  ],
+  "detector_train_seeds": [
+    7601,
+    7602,
+    7603,
+    7604,
+    7605,
+    7606,
+    7607,
+    7608,
+    7609,
+    7610
+  ],
+  "alert_budget": 1800,
+  "edge_budget": 400,
+  "ablation_types": [
+    "none",
+    "temporal",
+    "topology",
+    "signal",
+    "temporal+topology",
+    "temporal+signal",
+    "topology+signal",
+    "all"
+  ],
+  "ranker_mask_indices": {
+    "temporal": [
+      0
+    ],
+    "topology": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "signal": [
+      7,
+      8
+    ]
+  },
+  "gate_mask_indices": {
+    "temporal": [
+      5
+    ],
+    "topology": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "signal": [
+      6,
+      7
+    ]
+  },
+  "model_sha256": {
+    "frozen": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "limitations": [
+    "Synthetic-only",
+    "Inference-time zero masking, not feature-removal retraining",
+    "Gate best_score/margin and other derived features still reflect masked ranker scores; some proxy information remains",
+    "No test-based model selection",
+    "Matched signal resampling uses benign ground-truth labels",
+    "Frozen gate only",
+    "Fixed 1800 alerts and 400 predicted edges per seed"
+  ]
+}

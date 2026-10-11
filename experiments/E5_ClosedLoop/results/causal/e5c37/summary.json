@@ -1,0 +1,94 @@
+{
+  "experiment": "E5-C37",
+  "scope": "fresh synthetic seeds from same generator; no independent operational validation",
+  "train": "D:\\DRTT\\E5_ClosedLoop\\data\\causal\\e5c15_train",
+  "train_telemetry_sha256": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+  "train_ground_truth_sha256": "04ee0db0795bb3f77166d25f244cad4a7cc26271b76072bce96b330919d087ad",
+  "generator_parameters": {
+    "campaigns": 100,
+    "duration": 2400,
+    "background_events": 10000
+  },
+  "window": 90,
+  "seeds": [
+    3700,
+    3701,
+    3702,
+    3703,
+    3704
+  ],
+  "data_hashes": [
+    {
+      "seed": 3700,
+      "telemetry_sha256": "0117b6262462512b73f0f2e66cebdd9d833e4e1e057c54dc7055b19dcfccd261",
+      "ground_truth_sha256": "9a578603204d24b90a29b8448c4a61643b964445208a0b6e452c672e355498ac"
+    },
+    {
+      "seed": 3701,
+      "telemetry_sha256": "1e9cf11cc5978f485cde090547423e7c04650c6e8729977cf3c69aeaf7ef4162",
+      "ground_truth_sha256": "20f6acc12179cd63b7bf148dc11f3cf8bf8f5ab30b117165c66efdcfc901b1fe"
+    },
+    {
+      "seed": 3702,
+      "telemetry_sha256": "808b81d45112528c82698d5a05a13a407d44762d8a0b03e094bd57670e87f9ff",
+      "ground_truth_sha256": "b722c433748be94f865ebd7b7149a5a5a8eeaa1bea1499463f66a034fe44050f"
+    },
+    {
+      "seed": 3703,
+      "telemetry_sha256": "1015a228a125400e06cda97fa359b24f1bea5d647eeb751947facd70cdeb7430",
+      "ground_truth_sha256": "ad1e3230f71d082dbd3fc62149f7c991b639358f7acc84f3706e7f65127898c9"
+    },
+    {
+      "seed": 3704,
+      "telemetry_sha256": "d348ba300b096c464926143588ade97bcfd17b29b586c73d78ea325242c8dae9",
+      "ground_truth_sha256": "d80cb536c9674e8f7fd6fde9f9d929ce413615f28b96087bebdbd4d494dc5593"
+    }
+  ],
+  "metrics": {
+    "auroc": {
+      "signal_only_mean": 0.7429911285714286,
+      "signal_plus_context_mean": 0.7650629285714287,
+      "paired_mean_difference": 0.02207180000000002,
+      "paired_sd": 0.005970420245395756,
+      "per_seed_differences": [
+        0.022754857142857077,
+        0.023282071428571416,
+        0.01437842857142868,
+        0.019286571428571597,
+        0.030657071428571325
+      ]
+    },
+    "ap": {
+      "signal_only_mean": 0.18865097970269848,
+      "signal_plus_context_mean": 0.2150696708163745,
+      "paired_mean_difference": 0.026418691113675997,
+      "paired_sd": 0.00804143141285077,
+      "per_seed_differences": [
+        0.02376561993176221,
+        0.024597174472562794,
+        0.031610652285453955,
+        0.015546013902159539,
+        0.03657399497644148
+      ]
+    },
+    "logloss": {
+      "signal_only_mean": 0.21707671460384184,
+      "signal_plus_context_mean": 0.21168758622174919,
+      "paired_mean_difference": -0.005389128382092601,
+      "paired_sd": 0.0013354640968899379,
+      "per_seed_differences": [
+        -0.005272750690205302,
+        -0.0054587822480095805,
+        -0.003958291320819429,
+        -0.004717842478967976,
+        -0.007537975172460715
+      ]
+    }
+  },
+  "limitations": [
+    "Five realizations share one synthetic generator",
+    "Seed non-overlap with historical runs is not independently established",
+    "No threshold selection, feature selection, or model retraining using test labels",
+    "Previously explored features and model choices on development data"
+  ]
+}

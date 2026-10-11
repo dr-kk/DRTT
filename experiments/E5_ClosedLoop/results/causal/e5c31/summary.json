@@ -1,0 +1,62 @@
+{
+  "design": "Development-only gate for correctness of top-ranked causal parent; not independently validated",
+  "train": {
+    "events": 10700,
+    "selected_events": 2475,
+    "candidate_children": 2467
+  },
+  "train_positive_top1": 115,
+  "calibration": {
+    "events": 10700,
+    "selected_events": 2429,
+    "candidate_children": 2420
+  },
+  "calibration_true_edges": 600,
+  "baseline_cutoff": 2.4413699479901254,
+  "baseline": {
+    "predicted": 713,
+    "tp": 78,
+    "fp": 635,
+    "precision": 0.1093969144460028,
+    "recall": 0.13,
+    "f1": 0.1188118811881188
+  },
+  "new_gate_cutoff": 0.7321456700388247,
+  "new_gate": {
+    "predicted": 240,
+    "tp": 78,
+    "fp": 162,
+    "precision": 0.325,
+    "recall": 0.13,
+    "f1": 0.18571428571428572
+  },
+  "training_label_definition": "top-ranked parent equals true predecessor (not general existence of a parent)",
+  "features": [
+    "best_score",
+    "score_margin",
+    "score_mean",
+    "score_std",
+    "log_candidate_count",
+    "best_gap_norm",
+    "best_parent_signal",
+    "child_signal",
+    "same_source",
+    "same_destination",
+    "dst_to_src",
+    "src_to_dst",
+    "same_sensor",
+    "same_type"
+  ],
+  "min_predictions": 30,
+  "training_calibration_sha256": {
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "cal_telemetry": "9569cd87639af8ce2c2c5b05e448a545f70b1e13862fe12fb4f3a95f24fef2b5"
+  },
+  "limitations": [
+    "Calibration F1 is in-sample and cannot establish test improvement",
+    "Frozen pairwise ranker may select wrong parent even when a true parent exists",
+    "Synthetic datasets only",
+    "No fresh test labels read",
+    "Historical seed disjointness not proven"
+  ]
+}

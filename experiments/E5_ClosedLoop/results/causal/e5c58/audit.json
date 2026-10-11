@@ -1,0 +1,48 @@
+{
+  "experiment": "E5-C58",
+  "status": "TRAINING + DEVELOPMENT CALIBRATION ONLY; no independent evaluation",
+  "train_gate_rows": 2467,
+  "train_correct_top1": 115,
+  "train_incorrect_top1": 2352,
+  "calibration_alerts": 3644,
+  "calibration_children": 3637,
+  "calibration_true_edges": 600,
+  "budget_multiplier": 1.5,
+  "baseline": {
+    "predicted": 521,
+    "tp": 114,
+    "fp": 407,
+    "precision": 0.21880998080614203,
+    "recall": 0.19,
+    "f1": 0.20338983050847456
+  },
+  "proposed": {
+    "predicted": 481,
+    "tp": 113,
+    "fp": 368,
+    "precision": 0.23492723492723494,
+    "recall": 0.18833333333333332,
+    "f1": 0.20906567992599448
+  },
+  "selected_cutoff": 0.7437635536351849,
+  "min_predictions": 30,
+  "training_selection": "signal >=0.65; gate training labels from e5c15_train only",
+  "calibration_selection": "context detector fitted on training split; top N from E5-C17 telemetry",
+  "sha256": {
+    "baseline_ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "new_ranker": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "old_gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "train_truth": "04ee0db0795bb3f77166d25f244cad4a7cc26271b76072bce96b330919d087ad",
+    "cal_telemetry": "9569cd87639af8ce2c2c5b05e448a545f70b1e13862fe12fb4f3a95f24fef2b5",
+    "cal_truth": "89a13cf4e6a65437eddbfdf18160ab7d7fefbeec1041352109c4a873713cc1ec"
+  },
+  "limitations": [
+    "Calibration F1 is in-sample and optimistic",
+    "Gate training signal-selected but calibration context-selected: distribution shift possible",
+    "Frozen original gate calibration may shift at budget 1.5x",
+    "Original reranker and new reranker can select different parents",
+    "Same synthetic generator, no real-world validation",
+    "No E5-C57 or other independent test seeds used"
+  ]
+}

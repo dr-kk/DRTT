@@ -1,0 +1,70 @@
+{
+  "experiment": "E5-C65",
+  "status": "INDEPENDENT FROZEN SAFETY-CONSTRAINED POLICY EVALUATION",
+  "seed_range": [
+    6500,
+    6509
+  ],
+  "alert_budget": 1.5,
+  "policy_sha256": "6d7a279a8405b682194df52cf0aeb367db7d6e7c83b499f2bb0a213b5362b7ec",
+  "e5c62_policy_sha256": "41b8c5e20eb4c736ab7fe5cd62740512a9ce4c27dff6fc87c75e9bec671464a3",
+  "policy_thresholds": {
+    "sparse": 0.725,
+    "dense": 0.75,
+    "boundary": 16
+  },
+  "scenarios": {
+    "reference": {
+      "campaigns": 100,
+      "duration": 2400,
+      "background_events": 10000
+    },
+    "background_half": {
+      "campaigns": 100,
+      "duration": 2400,
+      "background_events": 5000
+    },
+    "background_double": {
+      "campaigns": 100,
+      "duration": 2400,
+      "background_events": 20000
+    },
+    "campaigns_half": {
+      "campaigns": 50,
+      "duration": 2400,
+      "background_events": 10000
+    },
+    "campaigns_onehalf": {
+      "campaigns": 150,
+      "duration": 2400,
+      "background_events": 10000
+    },
+    "duration_half": {
+      "campaigns": 100,
+      "duration": 1200,
+      "background_events": 10000
+    },
+    "duration_double": {
+      "campaigns": 100,
+      "duration": 4800,
+      "background_events": 10000
+    }
+  },
+  "model_sha256": {
+    "baseline_ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "proposed_ranker": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "original_gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "compatible_gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "train_sha256": {
+    "telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "ground_truth": "04ee0db0795bb3f77166d25f244cad4a7cc26271b76072bce96b330919d087ad"
+  },
+  "limitations": [
+    "All conditions use same synthetic generator family; not real-world domain shift",
+    "The same seed is reused across scenarios for paired comparisons, but event streams are regenerated",
+    "Duration changes observation-window density, not the 8-25 unit attack-stage gap distribution",
+    "No model fitting beyond rebuilding the frozen-training detector; no threshold selection on test seeds",
+    "Seed-level bootstrap CIs are approximate with few seeds; seven scenario comparisons are exploratory"
+  ]
+}

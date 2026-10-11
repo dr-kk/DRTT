@@ -1,0 +1,4 @@
+variant,irt_increase_vs_full,detection_change_pp,fpr_change_pp,fra_change_pp,overhead_change_ms_per_event
+w/o RL Adaptation,2.1500000000000004,0.0,0.0,0.0,0.0008189280513021258
+w/o Forensic Triangulation,0.20249999999999968,0.0,0.0,-11.571428571428566,-0.00563252771573667
+w/o Feedback Loop,0.75,-2.4285714285714355,-0.6820512820512818,0.0,-0.003886563210122207

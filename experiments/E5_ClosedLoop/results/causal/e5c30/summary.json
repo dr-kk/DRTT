@@ -1,0 +1,204 @@
+{
+  "design": "Calibration-only frozen-model error diagnosis; descriptive, not external validation",
+  "dataset": "data\\causal\\e5c17_calibration",
+  "events": 10700,
+  "truth_edges": 600,
+  "selected_events": 2429,
+  "candidate_children": 2420,
+  "threshold": 0.65,
+  "window": 90,
+  "frozen_cutoff": 2.4413699479901254,
+  "true_edge_loss_partition": {
+    "detection_lost": 388,
+    "ranking_lost": 88,
+    "correctly_ranked": 124
+  },
+  "predicted_child_categories": {
+    "no_true_parent": {
+      "before": 2066,
+      "after": 553
+    },
+    "true_parent_not_candidate": {
+      "before": 142,
+      "after": 35
+    },
+    "correct_parent": {
+      "before": 124,
+      "after": 78
+    },
+    "wrong_parent_with_true_candidate": {
+      "before": 88,
+      "after": 47
+    }
+  },
+  "before": {
+    "predicted": 2420,
+    "tp": 124,
+    "fp": 2296,
+    "precision": 0.0512396694214876,
+    "recall": 0.20666666666666667
+  },
+  "after": {
+    "predicted": 713,
+    "tp": 78,
+    "fp": 635,
+    "precision": 0.1093969144460028,
+    "recall": 0.13
+  },
+  "example_errors": {
+    "no_true_parent": [
+      {
+        "child": "EV00000011",
+        "predicted_parent": "EV00000010",
+        "true_parent": "",
+        "score": -0.21435050113251286,
+        "retained": false
+      },
+      {
+        "child": "EV00000016",
+        "predicted_parent": "EV00000011",
+        "true_parent": "",
+        "score": 0.17279028745622327,
+        "retained": false
+      },
+      {
+        "child": "EV00000032",
+        "predicted_parent": "EV00000011",
+        "true_parent": "",
+        "score": -0.9066136870771393,
+        "retained": false
+      },
+      {
+        "child": "EV00000038",
+        "predicted_parent": "EV00000018",
+        "true_parent": "",
+        "score": -0.9525526883108553,
+        "retained": false
+      },
+      {
+        "child": "EV00000042",
+        "predicted_parent": "EV00000021",
+        "true_parent": "",
+        "score": 2.3114200767747857,
+        "retained": false
+      }
+    ],
+    "correct_parent": [
+      {
+        "child": "EV00000604",
+        "predicted_parent": "EV00000529",
+        "true_parent": "EV00000529",
+        "score": 3.2678140834333025,
+        "retained": true
+      },
+      {
+        "child": "EV00000674",
+        "predicted_parent": "EV00000623",
+        "true_parent": "EV00000623",
+        "score": 3.3298273834876095,
+        "retained": true
+      },
+      {
+        "child": "EV00000713",
+        "predicted_parent": "EV00000669",
+        "true_parent": "EV00000669",
+        "score": 3.676130988485893,
+        "retained": true
+      },
+      {
+        "child": "EV00000876",
+        "predicted_parent": "EV00000745",
+        "true_parent": "EV00000745",
+        "score": 1.6242536683107076,
+        "retained": false
+      },
+      {
+        "child": "EV00000910",
+        "predicted_parent": "EV00000833",
+        "true_parent": "EV00000833",
+        "score": 2.669912439761964,
+        "retained": true
+      }
+    ],
+    "true_parent_not_candidate": [
+      {
+        "child": "EV00000658",
+        "predicted_parent": "EV00000603",
+        "true_parent": "EV00000565",
+        "score": 1.7144345976438746,
+        "retained": false
+      },
+      {
+        "child": "EV00000695",
+        "predicted_parent": "EV00000622",
+        "true_parent": "EV00000629",
+        "score": 0.7491042695516557,
+        "retained": false
+      },
+      {
+        "child": "EV00000723",
+        "predicted_parent": "EV00000679",
+        "true_parent": "EV00000635",
+        "score": 1.8451835967653185,
+        "retained": false
+      },
+      {
+        "child": "EV00000800",
+        "predicted_parent": "EV00000744",
+        "true_parent": "EV00000676",
+        "score": 1.9842771706435212,
+        "retained": false
+      },
+      {
+        "child": "EV00000829",
+        "predicted_parent": "EV00000718",
+        "true_parent": "EV00000759",
+        "score": 2.5973714548374645,
+        "retained": true
+      }
+    ],
+    "wrong_parent_with_true_candidate": [
+      {
+        "child": "EV00000669",
+        "predicted_parent": "EV00000617",
+        "true_parent": "EV00000604",
+        "score": 3.013172973243977,
+        "retained": true
+      },
+      {
+        "child": "EV00000728",
+        "predicted_parent": "EV00000685",
+        "true_parent": "EV00000658",
+        "score": 2.4553412313343284,
+        "retained": true
+      },
+      {
+        "child": "EV00000745",
+        "predicted_parent": "EV00000710",
+        "true_parent": "EV00000674",
+        "score": 2.3316762505334445,
+        "retained": false
+      },
+      {
+        "child": "EV00000833",
+        "predicted_parent": "EV00000715",
+        "true_parent": "EV00000713",
+        "score": 1.8588471113274387,
+        "retained": false
+      },
+      {
+        "child": "EV00000883",
+        "predicted_parent": "EV00000864",
+        "true_parent": "EV00000800",
+        "score": 2.2951194693235006,
+        "retained": false
+      }
+    ]
+  },
+  "limitations": [
+    "Ground truth used only for offline diagnostic labels",
+    "Calibration dataset previously used to choose cutoff",
+    "Synthetic campaign IDs are not causal proof",
+    "No tuning on evaluated E5-C18 test seeds"
+  ]
+}

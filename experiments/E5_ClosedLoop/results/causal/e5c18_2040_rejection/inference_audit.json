@@ -1,0 +1,13 @@
+{
+  "method": "logistic_pair_reranker_with_rejection_v1",
+  "events": 10700,
+  "predicted_positive_events": 2498,
+  "candidate_children": 2492,
+  "predicted_edges": 703,
+  "rejected_edges": 1789,
+  "decision_cutoff": 2.4413699479901254,
+  "threshold": 0.65,
+  "window": 90,
+  "ground_truth_used": false,
+  "tie_break": "score descending, gap ascending, event_id ascending"
+}

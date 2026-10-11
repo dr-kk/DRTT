@@ -1,0 +1,31 @@
+{
+  "dataset": "data\\causal\\e5c5\\telemetry.csv",
+  "true_edges": 600,
+  "c9": {
+    "predicted_edges": 2522,
+    "true_positives": 32,
+    "top_k_hits": {
+      "1": 32,
+      "3": 99,
+      "5": 120,
+      "10": 194
+    }
+  },
+  "c11_frozen_graph": {
+    "predicted_edges": 2522,
+    "true_positives": 33,
+    "top_k_hits": {
+      "1": 33,
+      "3": 98,
+      "5": 122,
+      "10": 192
+    }
+  },
+  "children_with_different_rankings": 1127,
+  "children_with_different_top1": 84,
+  "different_rankings_same_candidate_set": 1127,
+  "different_candidate_sets": 0,
+  "children_with_tied_best_score": 84,
+  "correct_c11_top1_with_tied_best_score": 2,
+  "note": "Exploratory diagnostic; seed 2027 has already been inspected. Scores and candidate IDs are computed from telemetry only."
+}

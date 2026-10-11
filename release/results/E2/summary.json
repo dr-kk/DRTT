@@ -1,0 +1,68 @@
+{
+  "experiment": "E2-v3 Hard/Incomplete Telemetry Paired Benchmark",
+  "campaigns": 100,
+  "dropout": 0.16,
+  "total_method_runs": 400,
+  "same_telemetry_for_all_methods": true,
+  "scope": "controlled synthetic cyber-range benchmark",
+  "methods_summary": [
+    {
+      "method": "Static Defense",
+      "irt_mean": 12.769028956410732,
+      "irt_sd": 3.848161459832669,
+      "detection_rate_mean": 0.5214285714285714,
+      "detection_rate_sd": 0.17154277100497456,
+      "fpr_mean": 0.016512820512820513,
+      "fpr_sd": 0.00826512640351983,
+      "fra_mean": 0.5214285714285714,
+      "fra_sd": 0.17154277100497456,
+      "overhead_ms_per_event_mean": 0.0023104889885051244,
+      "overhead_ms_per_event_sd": 0.0004904977874152008
+    },
+    {
+      "method": "Automated Red Teaming",
+      "irt_mean": 8.775229821683922,
+      "irt_sd": 2.188184959582577,
+      "detection_rate_mean": 0.7028571428571426,
+      "detection_rate_sd": 0.17310388695590112,
+      "fpr_mean": 0.05046153846153846,
+      "fpr_sd": 0.012951314101947579,
+      "fra_mean": 0.7028571428571426,
+      "fra_sd": 0.17310388695590112,
+      "overhead_ms_per_event_mean": 0.0028733285946367254,
+      "overhead_ms_per_event_sd": 0.0005485772368969312
+    },
+    {
+      "method": "Adaptive Defense",
+      "irt_mean": 8.087418306398988,
+      "irt_sd": 2.73520408634255,
+      "detection_rate_mean": 0.6442857142857141,
+      "detection_rate_sd": 0.1716869145254051,
+      "fpr_mean": 0.030717948717948716,
+      "fpr_sd": 0.011650752912681271,
+      "fra_mean": 0.8085714285714285,
+      "fra_sd": 0.17374576307809692,
+      "overhead_ms_per_event_mean": 0.04414099093098452,
+      "overhead_ms_per_event_sd": 0.006765902390269928
+    },
+    {
+      "method": "DRTT-Full",
+      "irt_mean": 6.056259486765413,
+      "irt_sd": 2.270565757246233,
+      "detection_rate_mean": 0.7499999999999999,
+      "detection_rate_sd": 0.16036317265793468,
+      "fpr_mean": 0.04728205128205128,
+      "fpr_sd": 0.015574755264445104,
+      "fra_mean": 0.8657142857142855,
+      "fra_sd": 0.13286870188199412,
+      "overhead_ms_per_event_mean": 0.0724001005852811,
+      "overhead_ms_per_event_sd": 0.007846190385921204
+    }
+  ],
+  "paired_drtt_vs_static": {
+    "mean_irt_reduction": 6.712769469645318,
+    "mean_detection_gain_pp": 22.85714285714285,
+    "mean_fpr_reduction_pp": -3.0769230769230766,
+    "mean_fra_gain_pp": 34.42857142857143
+  }
+}

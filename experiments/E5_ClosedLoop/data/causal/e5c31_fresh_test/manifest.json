@@ -1,0 +1,145 @@
+{
+  "design": "Fresh synthetic evaluation sets, no model fitting",
+  "generated_utc": "2026-10-10T13:51:09.932182+00:00",
+  "generator_path": "D:\\DRTT\\E5_ClosedLoop\\src\\causal\\e5c5_overlapping_generator.py",
+  "generator_sha256": "09d8534f922f59a87d7d82d99b492fbcf0acbd82b7034e7f5da189bd81bcaee5",
+  "parameters": {
+    "campaigns": 100,
+    "duration": 2400,
+    "background": 10000
+  },
+  "historical_seed_disjointness_verified": false,
+  "warning": "Researcher must verify these seeds were not used for model selection or earlier experiments; avoid examining labels until predictions are frozen.",
+  "datasets": [
+    {
+      "seed": 3100,
+      "folder": "seed_3100",
+      "audit": {
+        "events": 10700,
+        "malicious_events": 700,
+        "true_edges": 600,
+        "overlapping_campaign_pairs": 542,
+        "maximum_timestamp_gap": 3,
+        "observable_columns": [
+          "event_id",
+          "timestamp",
+          "source_host",
+          "destination_host",
+          "sensor",
+          "event_type",
+          "signal"
+        ],
+        "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+      },
+      "sha256": {
+        "telemetry.csv": "73fafb13bd1b120b1c42389c1cb23b9750e425d6f94c7c4dbbe08bf5d2ef7779",
+        "ground_truth.csv": "225d10815e793a0d08b59cafce4c2e04b7637b76e42e33bd0830965595f85f45",
+        "audit.json": "6927d0c9a6dd82a6bc5c7b8affe87e8a2c08229d89c3e308dee8b22872068390"
+      }
+    },
+    {
+      "seed": 3101,
+      "folder": "seed_3101",
+      "audit": {
+        "events": 10700,
+        "malicious_events": 700,
+        "true_edges": 600,
+        "overlapping_campaign_pairs": 481,
+        "maximum_timestamp_gap": 2,
+        "observable_columns": [
+          "event_id",
+          "timestamp",
+          "source_host",
+          "destination_host",
+          "sensor",
+          "event_type",
+          "signal"
+        ],
+        "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+      },
+      "sha256": {
+        "telemetry.csv": "4287396b002ee3884750bc993b7ec7d734e62fae20e2b30d56d577f41d575f67",
+        "ground_truth.csv": "ab50fa4b86bd4e45a43920a870b40e727fb2244c714e97501b02c2c690617e8d",
+        "audit.json": "092409c5b3524ac1f255b8d54b282429ed5e6810d6bf8470b3ce07cc1f5f0031"
+      }
+    },
+    {
+      "seed": 3102,
+      "folder": "seed_3102",
+      "audit": {
+        "events": 10700,
+        "malicious_events": 700,
+        "true_edges": 600,
+        "overlapping_campaign_pairs": 479,
+        "maximum_timestamp_gap": 2,
+        "observable_columns": [
+          "event_id",
+          "timestamp",
+          "source_host",
+          "destination_host",
+          "sensor",
+          "event_type",
+          "signal"
+        ],
+        "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+      },
+      "sha256": {
+        "telemetry.csv": "6d3aa96822cb41d1730708ea09fb7e55b604ab1161c5092736a60a47f1f5caa9",
+        "ground_truth.csv": "a87dce103613b673a9511750bcc97131dc7994349c722598c068e3adfdc35070",
+        "audit.json": "31fdc54c50271cb92d2debf7a6c0aa8d6e7d63b66aef2bd2145afb49b6418441"
+      }
+    },
+    {
+      "seed": 3103,
+      "folder": "seed_3103",
+      "audit": {
+        "events": 10700,
+        "malicious_events": 700,
+        "true_edges": 600,
+        "overlapping_campaign_pairs": 508,
+        "maximum_timestamp_gap": 2,
+        "observable_columns": [
+          "event_id",
+          "timestamp",
+          "source_host",
+          "destination_host",
+          "sensor",
+          "event_type",
+          "signal"
+        ],
+        "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+      },
+      "sha256": {
+        "telemetry.csv": "d64997fe01de530c44dfbe11858c62aebf85c0358d689f27c0a156483cda030d",
+        "ground_truth.csv": "e564d25b2a9a88c7d38cbc0086026d6bfb0f8c43dfe678d04ee249047c732588",
+        "audit.json": "e783fd407ca64a1014c719cc6c45bf7c91d34a3d9e06abc762f90a93a7a1e9fd"
+      }
+    },
+    {
+      "seed": 3104,
+      "folder": "seed_3104",
+      "audit": {
+        "events": 10700,
+        "malicious_events": 700,
+        "true_edges": 600,
+        "overlapping_campaign_pairs": 509,
+        "maximum_timestamp_gap": 2,
+        "observable_columns": [
+          "event_id",
+          "timestamp",
+          "source_host",
+          "destination_host",
+          "sensor",
+          "event_type",
+          "signal"
+        ],
+        "note": "Synthetic correlated attacks; not executable causal response or independent real-world validation"
+      },
+      "sha256": {
+        "telemetry.csv": "cd3f82ad80b38c34175e1b1d1d529683e49c06b25f3f1dd54d56590ac545c31c",
+        "ground_truth.csv": "14c114974e470f87ee1468f8709461ae66214701711fd71cfbd3aa9d9c72e63d",
+        "audit.json": "be262ff3f23b434a5a7a6b99b0780b75c0bdd203ae887ac02f4fd41c5ce01bd0"
+      }
+    }
+  ]
+}

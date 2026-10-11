@@ -1,0 +1,16 @@
+{
+  "experiment": "E5-C73",
+  "seeds": [
+    7301,
+    7302,
+    7303,
+    7304,
+    7305
+  ],
+  "models_sha256": {
+    "old": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "new": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "note": "Frozen synthetic-only audit; baselines share gate-selected child set and edge count. Host heuristic is predeclared, label-blind. No model tuning."
+}

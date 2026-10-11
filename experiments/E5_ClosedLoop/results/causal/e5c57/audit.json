@@ -1,0 +1,31 @@
+{
+  "experiment": "E5-C57",
+  "purpose": "Independent ranking evaluation of frozen E5-C56 model",
+  "seeds": [
+    5700,
+    5701,
+    5702,
+    5703,
+    5704,
+    5705,
+    5706,
+    5707,
+    5708,
+    5709
+  ],
+  "budgets": [
+    1.0,
+    1.25,
+    1.5,
+    2.0,
+    3.0
+  ],
+  "original_sha256": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+  "proposed_sha256": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+  "training_telemetry_sha256": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+  "training_truth_sha256": "04ee0db0795bb3f77166d25f244cad4a7cc26271b76072bce96b330919d087ad",
+  "model_fitting_on_evaluation_seeds": false,
+  "gate_evaluated": false,
+  "interpretation": "Synthetic independent-seed ranking validation only; no end-to-end acceptance claims. Budget x1.5 was development best F1, not independently optimized here.",
+  "bootstrap": "20,000 seed-level paired resamples; descriptive percentile confidence intervals; repeated budgets within seeds are correlated"
+}

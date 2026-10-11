@@ -1,0 +1,155 @@
+{
+  "experiment": "E5-C44",
+  "scope": "frozen models, fresh specified synthetic seeds; historical nonuse unverified",
+  "seed_range": [
+    4400,
+    4404
+  ],
+  "generator": {
+    "campaigns": 100,
+    "duration": 2400,
+    "background_events": 10000
+  },
+  "models_sha256": "188e748c96744f30358be7010f92d931eaf72b542c4b65704741f031d93b8a8d",
+  "ranker_sha256": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+  "constant_test_prevalence_brier_reference_only": 0.07156358507628179,
+  "summary": {
+    "balanced": {
+      "pooled": {
+        "n": 12129,
+        "positives": 941,
+        "prevalence": 0.0775826531453541,
+        "mean_probability": 0.3522350149335964,
+        "auroc": 0.8065694533044933,
+        "average_precision": 0.2915110612736961,
+        "brier": 0.16870541981556117,
+        "log_loss": 0.5063197630708346,
+        "ece_10": 0.27465236178824226,
+        "tp": 650,
+        "fp": 2754,
+        "fn": 291,
+        "tn": 8434,
+        "precision_0_5": 0.190951821386604,
+        "recall_0_5": 0.6907545164718385
+      },
+      "mean_per_seed": {
+        "auroc": 0.8053578275775383,
+        "average_precision": 0.2961280862824356,
+        "brier": 0.16867363042958747,
+        "log_loss": 0.5062428100896167,
+        "ece_10": 0.27462112650471,
+        "precision_0_5": 0.19033525765652803,
+        "recall_0_5": 0.6886278681255747
+      }
+    },
+    "balanced_sigmoid_cv5": {
+      "pooled": {
+        "n": 12129,
+        "positives": 941,
+        "prevalence": 0.0775826531453541,
+        "mean_probability": 0.0763597446059406,
+        "auroc": 0.8061268202571679,
+        "average_precision": 0.29137893629471817,
+        "brier": 0.06246953003370441,
+        "log_loss": 0.22408684784006852,
+        "ece_10": 0.004484777171264791,
+        "tp": 38,
+        "fp": 44,
+        "fn": 903,
+        "tn": 11144,
+        "precision_0_5": 0.4634146341463415,
+        "recall_0_5": 0.040382571732199786
+      },
+      "mean_per_seed": {
+        "auroc": 0.8048953837263324,
+        "average_precision": 0.2960547893633745,
+        "brier": 0.06243138500739821,
+        "log_loss": 0.2240006472823722,
+        "ece_10": 0.009121938446595363,
+        "precision_0_5": 0.4597300944669366,
+        "recall_0_5": 0.04053990752651569
+      }
+    },
+    "unweighted": {
+      "pooled": {
+        "n": 12129,
+        "positives": 941,
+        "prevalence": 0.0775826531453541,
+        "mean_probability": 0.07566104585423654,
+        "auroc": 0.806562994281485,
+        "average_precision": 0.29914644301232635,
+        "brier": 0.06222884497725552,
+        "log_loss": 0.22392463966990764,
+        "ece_10": 0.008196591937825874,
+        "tp": 92,
+        "fp": 73,
+        "fn": 849,
+        "tn": 11115,
+        "precision_0_5": 0.5575757575757576,
+        "recall_0_5": 0.09776833156216791
+      },
+      "mean_per_seed": {
+        "auroc": 0.8053411995848364,
+        "average_precision": 0.302443754174287,
+        "brier": 0.06219163252254436,
+        "log_loss": 0.22384160845766035,
+        "ece_10": 0.01001624201263097,
+        "precision_0_5": 0.5596536796536796,
+        "recall_0_5": 0.09831062695113377
+      }
+    }
+  },
+  "seed_manifest": [
+    {
+      "seed": 4400,
+      "telemetry_sha256": "103bb09f23598801cfb090609b9e9694b2d379ee63200f788291f82fbf3c6e2f",
+      "truth_sha256": "dc9673bebf8503e80ea12d00baccc1805638b674022424c609c2c76aca601bfb",
+      "events": 10700,
+      "selected": 2437,
+      "candidate_children": 2431,
+      "available": 188
+    },
+    {
+      "seed": 4401,
+      "telemetry_sha256": "553e2c9445a38dda4556da1e8f239c4ff02c98ddf2e88ce3e3e68a898fc15acf",
+      "truth_sha256": "b93cec3b468b90a0dbcfed9fc19df58a515e26d3ff9b5702678ed64e40e5a902",
+      "events": 10700,
+      "selected": 2422,
+      "candidate_children": 2413,
+      "available": 188
+    },
+    {
+      "seed": 4402,
+      "telemetry_sha256": "8aba8cee470b599bbe7a1c96387ad3f237531ad8669798099ebc255fe0edcf10",
+      "truth_sha256": "79e23bb7d2313b9dac283b86db9c9a494d565f68bd7254ad90e69d42a8d0fa72",
+      "events": 10700,
+      "selected": 2389,
+      "candidate_children": 2381,
+      "available": 175
+    },
+    {
+      "seed": 4403,
+      "telemetry_sha256": "2e967642f28754f6f38b03240781c55c0ab726f27100a2270c4377e5426ce08e",
+      "truth_sha256": "ef9244081e4dd5efcf520d732548651e5f60453ef227cf88f7be7428bb41b55d",
+      "events": 10700,
+      "selected": 2483,
+      "candidate_children": 2477,
+      "available": 219
+    },
+    {
+      "seed": 4404,
+      "telemetry_sha256": "e580f2a760de3cb8b1466574d2876a3c9a119a2d3dac680ec1a9696ddd9b8096",
+      "truth_sha256": "3b4f5b236240d3076ae124835b7d47394ffdfbaa52486ddcf5d99bb79a32c07b",
+      "events": 10700,
+      "selected": 2435,
+      "candidate_children": 2427,
+      "available": 171
+    }
+  ],
+  "limitations": [
+    "Same synthetic generator as development; not external validity",
+    "Seeds specified after development; historical nonuse not independently verified",
+    "No thresholds tuned; fixed 0.50 decisions are not end-to-end causal edges",
+    "Test prevalence baseline is descriptive, not an operational deployable baseline"
+  ]
+}

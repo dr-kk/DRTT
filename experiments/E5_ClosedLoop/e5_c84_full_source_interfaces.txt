@@ -1,0 +1,741 @@
+﻿DRTT E5-C84 SOURCE-CODE AUDIT
+
+========== e5c75_calibrated_end_to_end.py ==========
+
+"""E5-C75: independent calibrated hard-negative ranker evaluation.
+Run from D:\\DRTT\\E5_ClosedLoop. Does not overwrite previous results.
+Gate fit: 7501-7505; gate C validation: 7506-7508; locked test: 7509-7513.
+Same detector, alert budget, candidates, and per-seed output-edge budget for both rankers.
+No ground truth accessed during inference; labels only for gate fitting/validation/evaluation.
+"""
+import csv, hashlib, json, pickle, random, sys
+from pathlib import Path
+from collections import defaultdict
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT/'src'/'causal'))
+import e5c5_overlapping_generator as gen
+import e5c38_end_to_end as c38
+import e5c58_compatible_gate_calibration as c58
+import e5c15_reranker as base
+
+OUT=ROOT/'results/causal/e5c75_calibrated_end_to_end'
+FIT=list(range(7501,7506));VAL=list(range(7506,7509));TEST=list(range(7509,7514))
+W=90;DENSITY=16
+
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def load(p):
+ if not p.is_file():raise FileNotFoundError(p)
+ with p.open('rb') as f:return pickle.load(f) # Trusted locally generated models only.
+def read(p):
+ with p.open(newline='',encoding='utf-8-sig') as f:return list(csv.DictReader(f))
+def dump(p,rows):
+ if not rows:return
+ keys=list(dict.fromkeys(k for r in rows for k in r))
+ with p.open('w',newline='',encoding='utf-8') as f:
+  w=csv.DictWriter(f,fieldnames=keys);w.writeheader();w.writerows(rows)
+def f1(tp,pred,truth):return 2*tp/(pred+truth) if pred+truth else 0.
+def top_budget(rows,prob,budget):
+ order=sorted(range(len(rows)),key=lambda i:(-float(prob[i]),rows[i]['child'],rows[i]['parent']))
+ return {(rows[i]['parent'],rows[i]['child']) for i in order[:min(budget,len(order))]}
+def frozen_budget(rows,gate):
+ if not rows:return 0
+ gp=gate['model'].predict_proba(np.asarray([r['features'] for r in rows]))[:,1]
+ return int(sum(float(p)>=float(gate['cutoff']) for p in gp))
+def prepare(seed,detector,frozen,new,gate):
+ ev,ground=gen.generate(seed,100,2400,10000)
+ truth={(r['predecessor_event_id'],r['event_id']) for r in ground if r['predecessor_event_id']}
+ byid={r['event_id']:int(r['malicious']) for r in ground}
+ benign=[r['signal'] for r in ev if byid[r['event_id']]==0]
+ rng=random.Random(170000+seed)
+ matched=[dict(r) for r in ev]
+ for r in matched:r['signal']=rng.choice(benign)
+ n=min(len(ev),round(sum(float(r['signal'])>=.65 for r in ev)*float(gate['budget'])))
+ variants={}
+ for variant,events in [('original',ev),('matched_signal',matched)]:
+  ids=[r['event_id'] for r in events];ff=c38.extract(events,W)
+  probs=detector.predict_proba(np.asarray([ff[i] for i in ids]))[:,1]
+  chosen={i for i,_ in sorted(zip(ids,probs),key=lambda z:(-float(z[1]),z[0]))[:n]}
+  fr=c58.top_rows(events,chosen,frozen,W)
+  nr=c58.top_rows(events,chosen,new,W)
+  if [r['child'] for r in fr]!=[r['child'] for r in nr]:raise RuntimeError('Candidate child mismatch')
+  variants[variant]=(fr,nr)
+ # Predeclare budget from ORIGINAL frozen global gate; same count for both models and variants.
+ budget=frozen_budget(variants['original'][0],gate)
+ return truth,variants,budget,n
+
+def eval_one(ds,gate_new,gate_frozen,split,variants=('original','matched_signal')):
+ rows=[]
+ for seed,(truth,variants_map,budget,alerts) in ds.items():
+  for variant in variants:
+   fr,nr=variants_map[variant]
+   for name,rr,gg in [('Frozen',fr,gate_frozen['model']),('HardNegative',nr,gate_new)]:
+    if not rr:continue
+    pr=gg.predict_proba(np.asarray([r['features'] for r in rr]))[:,1]
+    pred=top_budget(rr,pr,budget)
+    tp=len(pred&truth)
+    rows.append(dict(split=split,seed=seed,variant=variant,model=name,truth=len(truth),alerts=alerts,
+                     candidate_children=len(rr),budget=budget,predicted=len(pred),tp=tp,fp=len(pred)-tp,fn=len(truth)-tp,
+                     precision=tp/len(pred) if pred else 0.,recall=tp/len(truth),f1=f1(tp,len(pred),len(truth))))
+ return rows
+
+def summarize(rows):
+ groups=defaultdict(list)
+ for r in rows:groups[(r['split'],r['variant'],r['model'])].append(r)
+ out=[]
+ for (split,variant,model),rr in groups.items():
+  tp=sum(r['tp'] for r in rr);pred=sum(r['predicted'] for r in rr);truth=sum(r['truth'] for r in rr)
+  out.append(dict(split=split,variant=variant,model=model,seeds=len(rr),truth=truth,predicted=pred,tp=tp,
+                  fp=pred-tp,fn=truth-tp,pooled_precision=tp/pred if pred else 0.,pooled_recall=tp/truth if truth else 0.,pooled_f1=f1(tp,pred,truth)))
+ return out
+
+def main():
+ if OUT.exists():raise SystemExit(f'Refusing to overwrite: {OUT}')
+ paths={'old':ROOT/'results/causal/e5c15/reranker.pkl',
+        'frozen':ROOT/'results/causal/e5c56/reranker_no_gap_rank.pkl',
+        'gate':ROOT/'results/causal/e5c58/compatible_gate.pkl',
+        'hard':ROOT/'results/causal/e5c74_hard_negative_reranker/selected_model.pkl'}
+ for k,p in paths.items():
+  if not p.is_file():raise FileNotFoundError(f'{k}: {p}')
+ old=load(paths['old']);frozen=load(paths['frozen']);gate=load(paths['gate']);hard=load(paths['hard'])
+ if old['features']!=base.FEATURES or frozen['features']!=base.FEATURES[:-1] or hard['features']!=base.FEATURES[:-1]:raise RuntimeError('Ranker feature mismatch')
+ if gate['features']!=c58.GATE_FEATURES:raise RuntimeError('Gate feature mismatch')
+ if frozen.get('baseline_sha256')!=sha(paths['old']) or gate.get('e5c56_sha256')!=sha(paths['frozen']):raise RuntimeError('Frozen lineage mismatch')
+ audit74=json.loads((paths['hard'].parent/'audit.json').read_text(encoding='utf-8'))
+ if hard.get('selection')!=audit74.get('selected_config') or audit74.get('test_seeds')!=list(range(7414,7419)):raise RuntimeError('E5-C74 selection provenance mismatch')
+ tr=read(ROOT/'data/causal/e5c15_train/telemetry.csv')
+ labels={r['event_id']:int(r['malicious']) for r in read(ROOT/'data/causal/e5c15_train/ground_truth.csv')}
+ feats=c38.extract(tr,W);ids=[r['event_id'] for r in tr]
+ detector=make_pipeline(StandardScaler(),LogisticRegression(max_iter=2000,random_state=0))
+ detector.fit(np.asarray([feats[i] for i in ids]),np.asarray([labels[i] for i in ids]))
+ ds={}
+ for split,seeds in [('fit',FIT),('validation',VAL),('test',TEST)]:
+  group={}
+  for seed in seeds:
+   group[seed]=prepare(seed,detector,frozen,hard,gate)
+   print(f'{split} seed={seed} budget={group[seed][2]} candidates={len(group[seed][1]["original"][1])}',flush=True)
+  ds[split]=group
+ # Gate training uses only FIT seeds, and only ORIGINAL telemetry.
+ X=[];y=[]
+ for seed,(truth,variants,budget,alerts) in ds['fit'].items():
+  for r in variants['original'][1]:
+   X.append(r['features']);y.append(int((r['parent'],r['child']) in truth))
+ X=np.asarray(X,dtype=float);y=np.asarray(y,dtype=int)
+ if len(set(y.tolist()))!=2:raise RuntimeError('Gate fit labels contain only one class')
+ # Select gate regularization on separate validation seeds; never on test.
+ candidate_C=(0.01,0.1,1.,10.)
+ gates={};validation=[]
+ for C in candidate_C:
+  m=LogisticRegression(max_iter=3000,class_weight='balanced',C=C,random_state=0)
+  m.fit(X,y)
+  gates[C]=m
+  rr=eval_one(ds['validation'],m,gate,'validation',variants=('original',))
+  ss=summarize(rr)
+  hard_row=next(z for z in ss if z['model']=='HardNegative')
+  validation.append({'C':C,**hard_row})
+ winner=sorted(validation,key=lambda z:(-z['pooled_f1'],z['C']))[0]['C']
+ print('Validation selected gate C:',winner)
+ test=eval_one(ds['test'],gates[winner],gate,'test')
+ summary=summarize(test)
+ OUT.mkdir(parents=True,exist_ok=False)
+ dump(OUT/'validation_gate_selection.csv',validation)
+ dump(OUT/'test_seed_metrics.csv',test)
+ dump(OUT/'test_summary.csv',summary)
+ with (OUT/'selected_gate.pkl').open('wb') as f:pickle.dump({'model':gates[winner],'features':c58.GATE_FEATURES,'C':winner,'fit_seeds':FIT,'validation_seeds':VAL},f)
+ (OUT/'audit.json').write_text(json.dumps({'experiment':'E5-C75','gate_fit_seeds':FIT,'gate_validation_seeds':VAL,'test_seeds':TEST,
+  'selected_C':winner,'fit_gate_rows':len(y),'fit_gate_positive':int(y.sum()),'alert_budget_multiplier':float(gate['budget']),
+  'budget_rule':'Per-seed frozen original Global cutoff edge count, fixed for both models and original/matched variants; label-free',
+  'matched_rule':'Each event signal independently resampled from original benign marginal; original alert count retained',
+  'model_sha256':{k:sha(p) for k,p in paths.items()},
+  'limitations':['Synthetic generator only','Original frozen gate trained on earlier data; hard-negative gate trained on new fit seeds','Gate regularization chosen on validation only','Matched-signal counterfactual distribution shift','Equal edge budget does not imply equal calibration quality','Test seeds untouched by fitting or selection']},indent=2),encoding='utf-8')
+ print('\nE5-C75 TEST SUMMARY')
+ for r in summary:print(r)
+ print('Saved:',OUT)
+if __name__=='__main__':main()
+
+========== e5c78_failure_decomposition.py ==========
+
+"""E5-C78: independent synthetic causal reconstruction failure decomposition.
+Run from D:\\DRTT\\E5_ClosedLoop. Does not overwrite previous experiments.
+Detectors retrained ONLY on E5-C76 train seeds (7601..7610); no fitting on 7801..7805.
+Top-k candidate rankings reproduce E5-C58 compatible features and tie-breaking.
+All metrics descriptive, no test-based model selection. Matched perturbation is label-informed.
+"""
+import csv, json, random, sys, hashlib
+from collections import defaultdict, deque
+from pathlib import Path
+import numpy as np
+ROOT=Path.cwd(); sys.path.insert(0,str(ROOT/'src'/'causal'))
+import e5c5_overlapping_generator as gen
+import e5c38_end_to_end as c38
+import e5c58_compatible_gate_calibration as c58
+import e5c15_reranker as base
+import e5c75_calibrated_end_to_end as e75
+import e5c76_signal_robust_detector as e76
+OUT=ROOT/'results/causal/e5c78_failure_decomposition'
+SEEDS=list(range(7801,7806)); ALERTS=[500,900,1300,1800,2400]; EDGES=[200,400,600]
+W=90
+
+def write(path,rows):
+    if not rows:return
+    cols=list(dict.fromkeys(k for r in rows for k in r))
+    with path.open('w',newline='',encoding='utf-8') as f:
+        w=csv.DictWriter(f,fieldnames=cols);w.writeheader();w.writerows(rows)
+
+def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def rank_candidates(events,chosen,ranker):
+    """Return child -> ordered parent IDs, using exactly the E5-C58 candidate rule."""
+    selected=sorted((e for e in events if e['event_id'] in chosen),key=lambda e:(int(e['timestamp']),e['event_id']))
+    active=deque(); output={}
+    for child in selected:
+        t=int(child['timestamp'])
+        while active and t-int(active[0]['timestamp'])>W:active.popleft()
+        pairs=[]
+        for parent in reversed(active):
+            gap=t-int(parent['timestamp'])
+            if gap<=0:continue
+            if not (parent['destination_host']==child['source_host'] or parent['source_host']==child['source_host'] or parent['destination_host']==child['destination_host']):continue
+            pairs.append((parent,gap))
+        pairs.sort(key=lambda z:(z[1],z[0]['event_id']))
+        if pairs:
+            x=[]
+            for i,(parent,gap) in enumerate(pairs):
+                x.append([gap/90.,float(parent['source_host']==child['source_host']),float(parent['destination_host']==child['destination_host']),float(parent['destination_host']==child['source_host']),float(parent['source_host']==child['destination_host']),float(parent['sensor']==child['sensor']),float(parent['event_type']==child['event_type']),float(parent['signal']),float(child['signal']),len(pairs)/50.,i/50.])
+            x=np.asarray(x,dtype=float)
+            z=x if len(ranker['features'])==11 else x[:,:-1]
+            scores=np.asarray(ranker['model'].decision_function(z),dtype=float).reshape(-1)
+            order=sorted(range(len(pairs)),key=lambda i:(-float(scores[i]),pairs[i][1],pairs[i][0]['event_id']))
+            output[child['event_id']]=[pairs[i][0]['event_id'] for i in order]
+        active.append(child)
+    return output
+
+def summarise(rows):
+    grouped=defaultdict(list)
+    for r in rows:grouped[tuple(r[k] for k in ('detector','variant','ranker','alerts','edge_budget'))].append(r)
+    ans=[]
+    for key,group in grouped.items():
+        truth=sum(r['truth'] for r in group); malicious=sum(r['malicious_events'] for r in group)
+        alert_edges=sum(r['alert_reachable_edges'] for r in group)
+        candidate=sum(r['candidate_reachable_edges'] for r in group)
+        t1=sum(r['top1_correct'] for r in group);t3=sum(r['top3_correct'] for r in group)
+        tp=sum(r['tp'] for r in group);pred=sum(r['predicted'] for r in group)
+        ans.append(dict(zip(('detector','variant','ranker','alerts','edge_budget'),key),seeds=len(group),truth=truth,
+          malicious_events=malicious,malicious_alerts=sum(r['malicious_alerts'] for r in group),
+          event_recall=sum(r['malicious_alerts'] for r in group)/malicious if malicious else 0,
+          alert_reachable_edges=alert_edges,alert_edge_recall=alert_edges/truth if truth else 0,
+          candidate_reachable_edges=candidate,candidate_recall_given_alerts=candidate/alert_edges if alert_edges else 0,
+          candidate_recall_global=candidate/truth if truth else 0,
+          top1_correct=t1,top1_given_candidates=t1/candidate if candidate else 0,
+          top3_correct=t3,top3_given_candidates=t3/candidate if candidate else 0,
+          predicted=pred,tp=tp,fp=pred-tp,fn=truth-tp,precision=tp/pred if pred else 0,
+          recall=tp/truth if truth else 0,pooled_f1=e75.f1(tp,pred,truth)))
+    return ans
+
+def main():
+    if OUT.exists():raise SystemExit(f'Refusing to overwrite existing results: {OUT}')
+    paths={'old':ROOT/'results/causal/e5c15/reranker.pkl',
+           'frozen':ROOT/'results/causal/e5c56/reranker_no_gap_rank.pkl',
+           'gate':ROOT/'results/causal/e5c58/compatible_gate.pkl',
+           'hard':ROOT/'results/causal/e5c74_hard_negative_reranker/selected_model.pkl',
+           'new_gate':ROOT/'results/causal/e5c75_calibrated_end_to_end/selected_gate.pkl'}
+    for k,p in paths.items():
+        if not p.is_file():raise FileNotFoundError(f'{k}: {p}')
+    old=e75.load(paths['old']);frozen=e75.load(paths['frozen']);hard=e75.load(paths['hard'])
+    gate=e75.load(paths['gate']);new_gate=e75.load(paths['new_gate'])
+    if old['features']!=base.FEATURES or frozen['features']!=base.FEATURES[:-1] or hard['features']!=base.FEATURES[:-1]:raise RuntimeError('Ranker feature schema mismatch')
+    if gate['features']!=c58.GATE_FEATURES or new_gate['features']!=c58.GATE_FEATURES:raise RuntimeError('Gate schema mismatch')
+    if frozen.get('baseline_sha256')!=sha(paths['old']) or gate.get('e5c56_sha256')!=sha(paths['frozen']):raise RuntimeError('Frozen lineage mismatch')
+    detectors=e76.fit_models();rankers={'Frozen':frozen,'HardNegative':hard};gates={'Frozen':gate,'HardNegative':new_gate}
+    rows=[]
+    for seed in SEEDS:
+        events,gt=gen.generate(seed,100,2400,10000)
+        truth={(r['predecessor_event_id'],r['event_id']) for r in gt if r.get('predecessor_event_id')}
+        labels={r['event_id']:int(r['malicious']) for r in gt}
+        benign=[r['signal'] for r in events if labels[r['event_id']]==0]
+        rng=random.Random(170000+seed)
+        matched=[dict(r,signal=rng.choice(benign)) for r in events]
+        for variant,ev in [('original',events),('matched_signal',matched)]:
+            ids=[r['event_id'] for r in ev]; feats=c38.extract(ev,W)
+            X=np.asarray([feats[i] for i in ids],dtype=float)
+            for dname,detector in detectors.items():
+                p=detector.predict_proba(X)[:,1]
+                sorted_ids=[eid for eid,_ in sorted(zip(ids,p),key=lambda z:(-float(z[1]),z[0]))]
+                for alerts in ALERTS:
+                    chosen=set(sorted_ids[:alerts]);mal=sum(labels[i] for i in chosen)
+                    reachable={(pa,ch) for pa,ch in truth if pa in chosen and ch in chosen}
+                    for rname,ranker in rankers.items():
+                        ranked_parents=rank_candidates(ev,chosen,ranker)
+                        candidate=sum(pa in ranked_parents.get(ch,()) for pa,ch in reachable)
+                        top1=sum(bool(ranked_parents.get(ch)) and ranked_parents[ch][0]==pa for pa,ch in reachable)
+                        top3=sum(pa in ranked_parents.get(ch,())[:3] for pa,ch in reachable)
+                        rr=c58.top_rows(ev,chosen,ranker,W)
+                        # Verify that the independent rank calculation matches the gate's top-ranked parent.
+                        if len(rr)!=len(ranked_parents) or any(r['parent']!=ranked_parents[r['child']][0] for r in rr):
+                            raise RuntimeError(f'Candidate ranking mismatch seed={seed} detector={dname} variant={variant} ranker={rname} alerts={alerts}')
+                        if rr:
+                            scores=gates[rname]['model'].predict_proba(np.asarray([r['features'] for r in rr],dtype=float))[:,1]
+                            ordered=sorted(range(len(rr)),key=lambda i:(-float(scores[i]),rr[i]['child'],rr[i]['parent']))
+                            ranked_edges=[(rr[i]['parent'],rr[i]['child']) for i in ordered]
+                        else:ranked_edges=[]
+                        for budget in EDGES:
+                            pred=set(ranked_edges[:budget]);tp=len(pred&truth)
+                            rows.append(dict(seed=seed,detector=dname,variant=variant,ranker=rname,alerts=alerts,
+                              edge_budget=budget,truth=len(truth),malicious_events=sum(labels.values()),malicious_alerts=mal,
+                              alert_reachable_edges=len(reachable),candidate_reachable_edges=candidate,
+                              top1_correct=top1,top3_correct=top3,candidate_children=len(rr),predicted=len(pred),tp=tp))
+        print(f'test seed={seed} complete',flush=True)
+    summary=summarise(rows)
+    OUT.mkdir(parents=True,exist_ok=False)
+    write(OUT/'test_seed_metrics.csv',rows);write(OUT/'test_summary.csv',summary)
+    # 400-edge compact view, useful for inspection; not selected based on test outcomes.
+    write(OUT/'fixed400_decomposition.csv',[r for r in summary if r['edge_budget']==400])
+    (OUT/'audit.json').write_text(json.dumps(dict(experiment='E5-C78',test_seeds=SEEDS,
+      detector_training_seeds=e76.TRAIN,alert_grid=ALERTS,edge_budget_grid=EDGES,
+      input_sha256={k:sha(v) for k,v in paths.items()},
+      candidate_rule='E5-C58: selected parents preceding child by 1..90 timestamps with one of three host links',
+      denominators={'event_recall':'selected malicious events / all malicious events',
+        'alert_edge_recall':'both endpoints alerted / all truth edges',
+        'candidate_recall_given_alerts':'true parent in candidate set / both endpoints alerted truth edges',
+        'top1_given_candidates':'true parent ranked first / true parent in candidate set',
+        'top3_given_candidates':'true parent ranked in first 3 / true parent in candidate set',
+        'pooled_f1':'2*TP/(predicted + truth)'},
+      limitations=['Synthetic-only','Matched-signal perturbation uses benign ground-truth labels to form counterfactual distribution',
+      'Top-k candidate diagnostics use ranker decision function, not gate probabilities',
+      'Frozen gate calibration differs between rerankers','All budgets evaluated on test: diagnostic grid, not model selection',
+      'No confidence intervals','Candidate search depends on alerts for both endpoints']),indent=2),encoding='utf-8')
+    print('\nE5-C78 FIXED 400-EDGE DECOMPOSITION (1800 alerts)')
+    for r in summary:
+        if r['alerts']==1800 and r['edge_budget']==400:print(r)
+    print('Saved:',OUT)
+if __name__=='__main__':main()
+
+========== e5c79_structure_aware_alert_selection.py ==========
+
+"""E5-C79: topology/temporal-aware alert selection; validation-only selection.
+Run from D:\\DRTT\\E5_ClosedLoop. Frozen E5-C76 detectors and E5-C75 rankers/gates.
+Validation 7901-7903, independent test 7904-7908. Synthetic-only.
+No truth labels enter alert selection, graph construction, or inference.
+"""
+import csv, json, hashlib, heapq, random, sys, math
+from pathlib import Path
+from collections import defaultdict, deque
+import numpy as np
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT/'src'/'causal'))
+import e5c5_overlapping_generator as gen
+import e5c38_end_to_end as c38
+import e5c58_compatible_gate_calibration as c58
+import e5c15_reranker as base
+import e5c75_calibrated_end_to_end as e75
+import e5c76_signal_robust_detector as e76
+OUT=ROOT/'results/causal/e5c79_structure_aware_alert_selection'
+VAL=[7901,7902,7903];TEST=[7904,7905,7906,7907,7908]
+W=90;ALERTS=[1300,1800];EDGE_BUDGET=400
+POLICIES=[('ScoreOnly',0.,0.),('TopologyWeak',0.12,0.),('TopologyStrong',0.35,0.),('Temporal',0.,0.2),('TopologyTemporal',0.2,0.15)]
+
+def write(p,rows):
+ if not rows:return
+ cols=list(dict.fromkeys(k for r in rows for k in r))
+ with p.open('w',newline='',encoding='utf-8') as f:
+  w=csv.DictWriter(f,fieldnames=cols);w.writeheader();w.writerows(rows)
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def variants(seed):
+ ev,gt=gen.generate(seed,100,2400,10000)
+ truth={(r['predecessor_event_id'],r['event_id']) for r in gt if r.get('predecessor_event_id')}
+ labels={r['event_id']:int(r['malicious']) for r in gt}
+ benign=[r['signal'] for r in ev if labels[r['event_id']]==0]
+ rng=random.Random(170000+seed)
+ matched=[dict(r,signal=rng.choice(benign)) for r in ev]
+ return truth,labels,{'original':ev,'matched_signal':matched}
+
+def graph(events):
+ """Host-compatible 1..90 time-neighborhood; symmetric for alert selection only."""
+ n=len(events);order=sorted(range(n),key=lambda i:(int(events[i]['timestamp']),events[i]['event_id']))
+ adj=[set() for _ in range(n)];near=[0]*n;active=deque()
+ for i in order:
+  a=events[i];t=int(a['timestamp'])
+  while active and t-int(events[active[0]]['timestamp'])>W:active.popleft()
+  for j in active:
+   b=events[j];gap=t-int(b['timestamp'])
+   if gap<=0:continue
+   near[i]+=1;near[j]+=1
+   if b['destination_host']==a['source_host'] or b['source_host']==a['source_host'] or b['destination_host']==a['destination_host']:
+    adj[i].add(j);adj[j].add(i)
+  active.append(i)
+ return adj,near
+
+def select(ids,probs,adj,near,k,alpha,beta):
+ """Greedy score + bounded selected-neighbor bonus; deterministic, label-free.
+ alpha rewards topology connections to already selected alerts; beta rewards temporal density.
+ """
+ n=len(ids);rank=sorted(range(n),key=lambda i:(-float(probs[i]),ids[i]))
+ base=[0.]*n
+ for pos,i in enumerate(rank):base[i]=1.-pos/max(n-1,1)
+ if not alpha and not beta:return set(ids[i] for i in rank[:k])
+ maxnear=max(max(near),1)
+ time=[math.log1p(x)/math.log1p(maxnear) for x in near]
+ count=[0]*n;selected=[False]*n;version=[0]*n
+ def value(i):return base[i]+alpha*min(count[i],3)/3.+beta*time[i]
+ heap=[(-value(i),ids[i],i,0) for i in range(n)];heapq.heapify(heap)
+ chosen=[]
+ while len(chosen)<min(k,n):
+  neg,_,i,v=heapq.heappop(heap)
+  if selected[i] or v!=version[i]:continue
+  selected[i]=True;chosen.append(ids[i])
+  if alpha:
+   for j in adj[i]:
+    if not selected[j] and count[j]<3:
+     count[j]+=1;version[j]+=1
+     heapq.heappush(heap,(-value(j),ids[j],j,version[j]))
+ return set(chosen)
+
+def evaluate(seed,truth,labels,variant,ev,detector,ranker,gate,policy,alerts,adj,near):
+ ids=[r['event_id'] for r in ev];features=c38.extract(ev,W)
+ probs=detector.predict_proba(np.asarray([features[i] for i in ids],dtype=float))[:,1]
+ name,alpha,beta=policy
+ chosen=select(ids,probs,adj,near,alerts,alpha,beta)
+ reachable=sum(pa in chosen and ch in chosen for pa,ch in truth)
+ rr=c58.top_rows(ev,chosen,ranker,W)
+ if rr:
+  p=gate['model'].predict_proba(np.asarray([r['features'] for r in rr],dtype=float))[:,1]
+  pred=e75.top_budget(rr,p,EDGE_BUDGET)
+ else:pred=set()
+ tp=len(pred&truth)
+ return dict(seed=seed,variant=variant,policy=name,alerts=alerts,edge_budget=EDGE_BUDGET,
+  truth=len(truth),malicious_events=sum(labels.values()),malicious_alerts=sum(labels[i] for i in chosen),
+  alert_reachable_edges=reachable,candidate_children=len(rr),predicted=len(pred),tp=tp,fp=len(pred)-tp,
+  fn=len(truth)-tp,f1=e75.f1(tp,len(pred),len(truth)))
+
+def aggregate(rows):
+ groups=defaultdict(list)
+ for r in rows:groups[(r['policy'],r['alerts'],r['variant'])].append(r)
+ out=[]
+ for (policy,alerts,variant),rr in groups.items():
+  truth=sum(x['truth'] for x in rr);pred=sum(x['predicted'] for x in rr);tp=sum(x['tp'] for x in rr)
+  out.append(dict(policy=policy,alerts=alerts,variant=variant,seeds=len(rr),truth=truth,predicted=pred,
+   tp=tp,fp=pred-tp,fn=truth-tp,malicious_alerts=sum(x['malicious_alerts'] for x in rr),
+   event_recall=sum(x['malicious_alerts'] for x in rr)/sum(x['malicious_events'] for x in rr),
+   alert_reachable_edges=sum(x['alert_reachable_edges'] for x in rr),
+   alert_edge_recall=sum(x['alert_reachable_edges'] for x in rr)/truth,
+   pooled_f1=e75.f1(tp,pred,truth)))
+ return out
+
+def main():
+ if OUT.exists():raise SystemExit(f'Refusing to overwrite {OUT}')
+ paths={'old':ROOT/'results/causal/e5c15/reranker.pkl',
+ 'frozen':ROOT/'results/causal/e5c56/reranker_no_gap_rank.pkl',
+ 'gate':ROOT/'results/causal/e5c58/compatible_gate.pkl',
+ 'hard':ROOT/'results/causal/e5c74_hard_negative_reranker/selected_model.pkl',
+ 'new_gate':ROOT/'results/causal/e5c75_calibrated_end_to_end/selected_gate.pkl'}
+ for k,p in paths.items():
+  if not p.is_file():raise FileNotFoundError(f'{k}: {p}')
+ old=e75.load(paths['old']);frozen=e75.load(paths['frozen']);hard=e75.load(paths['hard']);gate=e75.load(paths['gate']);new_gate=e75.load(paths['new_gate'])
+ if old['features']!=base.FEATURES or frozen['features']!=base.FEATURES[:-1] or hard['features']!=base.FEATURES[:-1]:raise RuntimeError('Ranker schema mismatch')
+ if gate['features']!=c58.GATE_FEATURES or new_gate['features']!=c58.GATE_FEATURES:raise RuntimeError('Gate schema mismatch')
+ detectors=e76.fit_models()
+ # Fixed detector/ranker choice from E5-C77 validation, not selected on E5-C79 test.
+ detector=detectors['OriginalOnly'];ranker=hard;gating=new_gate
+ def run(seeds,policies,alert_values,split):
+  rows=[]
+  for seed in seeds:
+   truth,labels,evmap=variants(seed)
+   for variant,ev in evmap.items():
+    adj,near=graph(ev)
+    ids=[r['event_id'] for r in ev];features=c38.extract(ev,W)
+    scores=detector.predict_proba(np.asarray([features[i] for i in ids],dtype=float))[:,1]
+    for alerts in alert_values:
+     for policy in policies:
+      chosen=select(ids,scores,adj,near,alerts,policy[1],policy[2])
+      rr=c58.top_rows(ev,chosen,ranker,W)
+      if rr:
+       gp=gating['model'].predict_proba(np.asarray([r['features'] for r in rr],dtype=float))[:,1]
+       pred=e75.top_budget(rr,gp,EDGE_BUDGET)
+      else:pred=set()
+      tp=len(pred&truth)
+      rows.append(dict(split=split,seed=seed,variant=variant,policy=policy[0],alerts=alerts,
+       edge_budget=EDGE_BUDGET,truth=len(truth),malicious_events=sum(labels.values()),
+       malicious_alerts=sum(labels[i] for i in chosen),alert_reachable_edges=sum(pa in chosen and ch in chosen for pa,ch in truth),
+       candidate_children=len(rr),predicted=len(pred),tp=tp,fp=len(pred)-tp,fn=len(truth)-tp,
+       f1=e75.f1(tp,len(pred),len(truth))))
+   print(f'{split} seed={seed} complete',flush=True)
+  return rows
+ validation=run(VAL,POLICIES,ALERTS,'validation');vsum=aggregate(validation)
+ # Select structure-aware policy on mean original+matched F1; same budget for control.
+ options=[]
+ for policy,_,_ in POLICIES[1:]:
+  for alerts in ALERTS:
+   sub=[r for r in vsum if r['policy']==policy and r['alerts']==alerts]
+   if len(sub)!=2:raise RuntimeError('Missing validation conditions')
+   score=sum(r['pooled_f1'] for r in sub)/2
+   options.append(dict(policy=policy,alerts=alerts,validation_mean_f1=score,
+    validation_original_f1=next(r['pooled_f1'] for r in sub if r['variant']=='original'),
+    validation_matched_f1=next(r['pooled_f1'] for r in sub if r['variant']=='matched_signal')))
+ winner=sorted(options,key=lambda r:(-r['validation_mean_f1'],r['alerts'],r['policy']))[0]
+ selected=next(p for p in POLICIES if p[0]==winner['policy'])
+ print('Validation winner:',winner,flush=True)
+ test=run(TEST,[POLICIES[0],selected],[winner['alerts']],'test');summary=aggregate(test)
+ OUT.mkdir(parents=True,exist_ok=False)
+ write(OUT/'validation_seed_metrics.csv',validation);write(OUT/'validation_summary.csv',vsum)
+ write(OUT/'validation_policy_selection.csv',options);write(OUT/'selected_configuration.csv',[winner])
+ write(OUT/'test_seed_metrics.csv',test);write(OUT/'test_summary.csv',summary)
+ (OUT/'audit.json').write_text(json.dumps(dict(experiment='E5-C79',train_seeds=e76.TRAIN,
+  validation_seeds=VAL,test_seeds=TEST,policies=POLICIES,alert_grid=ALERTS,edge_budget=EDGE_BUDGET,
+  selected=winner,detector='OriginalOnly',ranker='HardNegative',gate='E5-C75',
+  input_sha256={k:sha(p) for k,p in paths.items()},
+  limitations=['Synthetic-only','Matched-signal perturbation uses ground-truth benign labels to create evaluation distribution',
+  'Validation selected among four structure-aware variants; test compares only winner with same-budget score-only control',
+  'No new detector or gate training','Topology heuristic may favor dense benign neighborhoods',
+  'No confidence intervals; planned for E5-C82']),indent=2),encoding='utf-8')
+ print('\nE5-C79 TEST SUMMARY')
+ for r in summary:print(r)
+ print('Saved:',OUT)
+if __name__=='__main__':main()
+
+========== e5c80_component_ablation.py ==========
+
+"""E5-C80: fixed-budget inference-time component ablations (diagnostic, NOT retraining).
+Run from D:\\DRTT\\E5_ClosedLoop; requires e5c75 and e5c76 scripts and frozen models.
+Masking standardized-model inputs is distribution-shifting; results are sensitivity tests,
+not causal component contributions. No test-based selection.
+"""
+import csv, json, hashlib, random, sys
+from pathlib import Path
+from collections import defaultdict
+import numpy as np
+ROOT=Path.cwd(); sys.path.insert(0,str(ROOT/'src'/'causal'))
+import e5c5_overlapping_generator as gen
+import e5c38_end_to_end as c38
+import e5c58_compatible_gate_calibration as c58
+import e5c75_calibrated_end_to_end as e75
+import e5c76_signal_robust_detector as e76
+OUT=ROOT/'results/causal/e5c80_component_ablation'
+SEEDS=list(range(8001,8006)); ALERTS=1800; EDGE_BUDGET=400; W=90
+# Mask components at both the reranker and gate. Indices follow E5-C56/C58 schemas.
+RANK_MASK={'temporal':[0],'topology':[1,2,3,4],'signal':[7,8]}
+GATE_MASK={'temporal':[5],'topology':[8,9,10,11],'signal':[6,7]}
+ABLATIONS=['none','temporal','topology','signal','temporal+topology','temporal+signal','topology+signal','all']
+
+def write(path,rows):
+ if not rows:return
+ cols=list(dict.fromkeys(k for r in rows for k in r))
+ with path.open('w',newline='',encoding='utf-8') as f:
+  w=csv.DictWriter(f,fieldnames=cols);w.writeheader();w.writerows(rows)
+
+def mask(X,components,mapping):
+ Z=np.asarray(X,dtype=float).copy()
+ for component in components:
+  Z[:,mapping[component]]=0.
+ return Z
+
+class MaskedRanker:
+ def __init__(self,model,components):self.model=model;self.components=components
+ def decision_function(self,X):
+  return self.model.decision_function(mask(X,self.components,RANK_MASK))
+
+def summarise(rows):
+ groups=defaultdict(list)
+ for r in rows:groups[(r['detector'],r['variant'],r['ablation'])].append(r)
+ ans=[]
+ for (det,variant,ablation),rr in groups.items():
+  tp=sum(x['tp'] for x in rr); pred=sum(x['predicted'] for x in rr); truth=sum(x['truth'] for x in rr)
+  ans.append(dict(detector=det,variant=variant,ablation=ablation,seeds=len(rr),truth=truth,predicted=pred,tp=tp,fp=pred-tp,fn=truth-tp,
+   alert_edge_recall=sum(x['alert_reachable_edges'] for x in rr)/truth if truth else 0,
+   top1_correct=sum(x['top1_correct'] for x in rr),
+   precision=tp/pred if pred else 0,recall=tp/truth if truth else 0,pooled_f1=e75.f1(tp,pred,truth)))
+ return ans
+
+def main():
+ if OUT.exists():raise SystemExit(f'Refusing to overwrite: {OUT}')
+ paths={'frozen':ROOT/'results/causal/e5c56/reranker_no_gap_rank.pkl',
+        'gate':ROOT/'results/causal/e5c58/compatible_gate.pkl'}
+ for p in paths.values():
+  if not p.is_file():raise FileNotFoundError(p)
+ frozen=e75.load(paths['frozen']);gate=e75.load(paths['gate'])
+ if len(frozen['features'])!=10 or gate['features']!=c58.GATE_FEATURES:raise RuntimeError('Feature schema mismatch')
+ detectors=e76.fit_models();rows=[]
+ for seed in SEEDS:
+  events,gt=gen.generate(seed,100,2400,10000)
+  truth={(r['predecessor_event_id'],r['event_id']) for r in gt if r.get('predecessor_event_id')}
+  labels={r['event_id']:int(r['malicious']) for r in gt}
+  benign=[r['signal'] for r in events if labels[r['event_id']]==0]
+  rng=random.Random(170000+seed)
+  matched=[dict(r,signal=rng.choice(benign)) for r in events]
+  for variant,ev in [('original',events),('matched_signal',matched)]:
+   ids=[r['event_id'] for r in ev]; feats=c38.extract(ev,W)
+   X=np.asarray([feats[i] for i in ids],dtype=float)
+   for detname in ('OriginalOnly','NoSignal'):
+    probs=detectors[detname].predict_proba(X)[:,1]
+    chosen=set(i for i,_ in sorted(zip(ids,probs),key=lambda z:(-float(z[1]),z[0]))[:ALERTS])
+    reachable=sum(pa in chosen and ch in chosen for pa,ch in truth)
+    for ablation in ABLATIONS:
+     components=[] if ablation=='none' else (list(RANK_MASK) if ablation=='all' else ablation.split('+'))
+     wrapper={'model':MaskedRanker(frozen['model'],components),'features':frozen['features']}
+     rr=c58.top_rows(ev,chosen,wrapper,W)
+     if rr:
+      gx=np.asarray([r['features'] for r in rr],dtype=float)
+      gp=gate['model'].predict_proba(mask(gx,components,GATE_MASK))[:,1]
+      pred=e75.top_budget(rr,gp,EDGE_BUDGET)
+     else:pred=set()
+     top1=sum((r['parent'],r['child']) in truth for r in rr)
+     tp=len(pred&truth)
+     rows.append(dict(seed=seed,detector=detname,variant=variant,ablation=ablation,alerts=ALERTS,
+       edge_budget=EDGE_BUDGET,truth=len(truth),alert_reachable_edges=reachable,
+       candidate_children=len(rr),top1_correct=top1,predicted=len(pred),tp=tp))
+  print(f'test seed={seed} complete',flush=True)
+ summary=summarise(rows)
+ OUT.mkdir(parents=True,exist_ok=False)
+ write(OUT/'test_seed_metrics.csv',rows)
+ write(OUT/'test_summary.csv',summary)
+ (OUT/'audit.json').write_text(json.dumps({'experiment':'E5-C80','test_seeds':SEEDS,'detector_train_seeds':e76.TRAIN,
+  'alert_budget':ALERTS,'edge_budget':EDGE_BUDGET,'ablation_types':ABLATIONS,
+  'ranker_mask_indices':RANK_MASK,'gate_mask_indices':GATE_MASK,
+  'model_sha256':{k:hashlib.sha256(p.read_bytes()).hexdigest() for k,p in paths.items()},
+  'limitations':['Synthetic-only','Inference-time zero masking, not feature-removal retraining','Gate best_score/margin and other derived features still reflect masked ranker scores; some proxy information remains','No test-based model selection','Matched signal resampling uses benign ground-truth labels','Frozen gate only','Fixed 1800 alerts and 400 predicted edges per seed']},indent=2),encoding='utf-8')
+ print('\nE5-C80 SUMMARY')
+ for r in summary:print(r)
+ print('Saved:',OUT)
+if __name__=='__main__':main()
+
+========== e5c81_fair_baseline_comparison.py ==========
+
+"""E5-C81: fair fixed-budget reconstruction baseline comparison.
+Run from D:\\DRTT\\E5_ClosedLoop. Requires E5-C75 and E5-C76 scripts and saved models.
+Frozen policies; independent seeds 8101..8105; no test-time tuning.
+Baselines use the same detector-selected 1800 alerts, compatible candidate pairs,
+and 400 output edges per seed. Heuristics are label-free, NOT learned SOTA baselines.
+"""
+import csv, json, random, hashlib, sys
+from pathlib import Path
+from collections import defaultdict, deque
+import numpy as np
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT/'src'/'causal'))
+import e5c5_overlapping_generator as gen
+import e5c38_end_to_end as c38
+import e5c58_compatible_gate_calibration as c58
+import e5c75_calibrated_end_to_end as e75
+import e5c76_signal_robust_detector as e76
+OUT=ROOT/'results/causal/e5c81_fair_baseline_comparison'
+SEEDS=list(range(8101,8106));ALERTS=1800;EDGES=400;W=90
+METHODS=['Frozen','HardNegative','RecentParent','HostHandoff','TemporalHost','SeededRandom']
+
+def dump(p,rows):
+ if not rows:return
+ cols=list(dict.fromkeys(k for r in rows for k in r))
+ with p.open('w',newline='',encoding='utf-8') as f:
+  w=csv.DictWriter(f,fieldnames=cols);w.writeheader();w.writerows(rows)
+
+def candidate_map(events,chosen):
+ """Match E5-C58 parent compatibility: gap 1..90 and one of three host relations."""
+ selected=sorted((r for r in events if r['event_id'] in chosen),key=lambda r:(int(r['timestamp']),r['event_id']))
+ active=deque();candidates={}
+ for child in selected:
+  t=int(child['timestamp'])
+  while active and t-int(active[0]['timestamp'])>W:active.popleft()
+  cand=[]
+  for parent in active:
+   gap=t-int(parent['timestamp'])
+   if gap<=0:continue
+   a=int(parent['destination_host']==child['source_host'])
+   b=int(parent['source_host']==child['source_host'])
+   c=int(parent['destination_host']==child['destination_host'])
+   if a or b or c:cand.append((parent['event_id'],gap,a,b,c))
+  if cand:candidates[child['event_id']]=cand
+  active.append(child)
+ return candidates
+
+def heuristics(cmap,probs,seed,variant):
+ """Select one parent per child, then rank child edges by a label-free confidence score."""
+ out={k:[] for k in METHODS[2:]}
+ rng=random.Random(910000+seed+(0 if variant=='original' else 1))
+ for child,candidates in cmap.items():
+  # deterministic parent choice; ties broken by event ID
+  recent=min(candidates,key=lambda x:(x[1],x[0]))
+  handoff=min(candidates,key=lambda x:(-x[2],x[1],x[0]))
+  combined=min(candidates,key=lambda x:(-(2*x[2]+x[3]+x[4]),x[1],x[0]))
+  rand=candidates[rng.randrange(len(candidates))]
+  for method,c in [('RecentParent',recent),('HostHandoff',handoff),('TemporalHost',combined),('SeededRandom',rand)]:
+   parent,gap,a,b,d=c
+   # Common child detector score ranks edge acceptance. Tiny deterministic tie-break
+   # favors shorter gap and direct handoff; not tuned on any labels.
+   confidence=float(probs[child])+1e-6*(W-gap)/W+1e-8*a
+   out[method].append((confidence,parent,child))
+ return out
+
+def main():
+ if OUT.exists():raise SystemExit(f'Refusing to overwrite: {OUT}')
+ paths={'frozen':ROOT/'results/causal/e5c56/reranker_no_gap_rank.pkl',
+        'hard':ROOT/'results/causal/e5c74_hard_negative_reranker/selected_model.pkl',
+        'gate':ROOT/'results/causal/e5c58/compatible_gate.pkl',
+        'new_gate':ROOT/'results/causal/e5c75_calibrated_end_to_end/selected_gate.pkl'}
+ for k,p in paths.items():
+  if not p.is_file():raise FileNotFoundError(f'{k}: {p}')
+ models={k:e75.load(p) for k,p in paths.items()}
+ if models['gate']['features']!=c58.GATE_FEATURES or models['new_gate']['features']!=c58.GATE_FEATURES:
+  raise RuntimeError('Gate feature mismatch')
+ detectors=e76.fit_models();detector=detectors['OriginalOnly']
+ rows=[];diagnostics=[]
+ for seed in SEEDS:
+  ev,gt=gen.generate(seed,100,2400,10000)
+  truth={(r['predecessor_event_id'],r['event_id']) for r in gt if r.get('predecessor_event_id')}
+  labels={r['event_id']:int(r['malicious']) for r in gt}
+  benign=[r['signal'] for r in ev if labels[r['event_id']]==0]
+  rng=random.Random(170000+seed)
+  variants={'original':ev,'matched_signal':[dict(r,signal=rng.choice(benign)) for r in ev]}
+  for variant,events in variants.items():
+   ids=[r['event_id'] for r in events];features=c38.extract(events,W)
+   scores=detector.predict_proba(np.asarray([features[i] for i in ids],dtype=float))[:,1]
+   ps=dict(zip(ids,map(float,scores)))
+   chosen=set(sorted(ids,key=lambda i:(-ps[i],i))[:ALERTS])
+   cmap=candidate_map(events,chosen)
+   edge_coverage=sum(pa in chosen and ch in chosen for pa,ch in truth)
+   candidates_coverage=sum(any(pa==p for p,*_ in cmap.get(ch,[])) for pa,ch in truth)
+   preds={}
+   for name,rkey,gkey in [('Frozen','frozen','gate'),('HardNegative','hard','new_gate')]:
+    rr=c58.top_rows(events,chosen,models[rkey],W)
+    if set(r['child'] for r in rr)!=set(cmap):
+     raise RuntimeError(f'Candidate-child mismatch seed={seed} variant={variant} method={name}')
+    if rr:
+     X=np.asarray([r['features'] for r in rr],dtype=float)
+     gp=models[gkey]['model'].predict_proba(X)[:,1]
+     preds[name]=e75.top_budget(rr,gp,EDGES)
+    else:preds[name]=set()
+   for name,scored in heuristics(cmap,ps,seed,variant).items():
+    ranked=sorted(scored,key=lambda z:(-z[0],z[2],z[1]))[:EDGES]
+    preds[name]={(pa,ch) for _,pa,ch in ranked}
+   for method in METHODS:
+    pred=preds[method];tp=len(pred&truth)
+    rows.append(dict(seed=seed,variant=variant,method=method,alerts=ALERTS,edge_budget=EDGES,
+      truth=len(truth),alert_edge_reachable=edge_coverage,candidate_reachable=candidates_coverage,
+      candidate_children=len(cmap),predicted=len(pred),tp=tp,fp=len(pred)-tp,fn=len(truth)-tp,
+      precision=tp/len(pred) if pred else 0.,recall=tp/len(truth) if truth else 0.,
+      f1=e75.f1(tp,len(pred),len(truth))))
+   diagnostics.append(dict(seed=seed,variant=variant,truth=len(truth),alerts=ALERTS,
+      alert_edge_reachable=edge_coverage,candidate_reachable=candidates_coverage,candidate_children=len(cmap)))
+  print(f'test seed={seed} complete',flush=True)
+ groups=defaultdict(list)
+ for r in rows:groups[(r['variant'],r['method'])].append(r)
+ summary=[]
+ for (variant,method),group in groups.items():
+  tp=sum(x['tp'] for x in group);pred=sum(x['predicted'] for x in group);truth=sum(x['truth'] for x in group)
+  summary.append(dict(variant=variant,method=method,seeds=len(group),truth=truth,predicted=pred,
+    tp=tp,fp=pred-tp,fn=truth-tp,precision=tp/pred if pred else 0.,recall=tp/truth if truth else 0.,
+    pooled_f1=e75.f1(tp,pred,truth),alert_edge_recall=sum(x['alert_edge_reachable'] for x in group)/truth,
+    candidate_recall=sum(x['candidate_reachable'] for x in group)/truth))
+ OUT.mkdir(parents=True,exist_ok=False)
+ dump(OUT/'test_seed_metrics.csv',rows);dump(OUT/'test_summary.csv',summary);dump(OUT/'candidate_diagnostics.csv',diagnostics)
+ (OUT/'audit.json').write_text(json.dumps(dict(experiment='E5-C81',test_seeds=SEEDS,detector_train_seeds=e76.TRAIN,
+  alert_budget=ALERTS,edge_budget=EDGES,detector='OriginalOnly',methods=METHODS,
+  model_sha256={k:hashlib.sha256(p.read_bytes()).hexdigest() for k,p in paths.items()},
+  limitations=['Synthetic-only','Baselines are deterministic heuristics, not state-of-the-art learned methods',
+  'All methods share alerts and compatible candidate pairs and predict at most one parent per child',
+  'Learned gates are trained/calibrated on different historical data than the heuristic acceptance scores',
+  'Matched-signal perturbation is generated using benign ground-truth labels',
+  'Fixed budgets were prespecified from E5-C77 validation; no test-time selection',
+  'No statistical confidence intervals; reserved for E5-C82']),indent=2),encoding='utf-8')
+ print('\nE5-C81 TEST SUMMARY')
+ for r in summary:print(r)
+ print('Saved:',OUT)
+if __name__=='__main__':main()

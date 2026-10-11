@@ -1,0 +1,43 @@
+{
+  "experiment": "E5-C46",
+  "scope": "development-only E5-C17 threshold selection; NOT independent validation",
+  "selected_model": "unweighted",
+  "selected_threshold": 0.18926018798147812,
+  "selection_rule": "minimize false accepted edges subject to >=90% (configurable) of baseline true edges; tie break higher TP, then lower threshold",
+  "min_tp_retention": 0.9,
+  "baseline": {
+    "tp": 68,
+    "fp": 201,
+    "predicted": 269,
+    "truth_edges": 600,
+    "candidate_children": 2423,
+    "alerts": 2429
+  },
+  "selected_development_metrics": {
+    "threshold": 0.18926018798147812,
+    "tp": 62,
+    "fp": 141,
+    "predicted": 203,
+    "tp_retention": 0.9117647058823529,
+    "fp_reduction": 0.29850746268656714,
+    "precision": 0.3054187192118227,
+    "recall": 0.10333333333333333,
+    "f1": 0.1544209215442092,
+    "feasible": 1
+  },
+  "thresholds_examined": 270,
+  "sha256": {
+    "models": "188e748c96744f30358be7010f92d931eaf72b542c4b65704741f031d93b8a8d",
+    "ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "train_telemetry": "1207cf5502708635dc1ee5ad7268c4f82a156ad792878205ff81388607e6fef5",
+    "calibration_telemetry": "9569cd87639af8ce2c2c5b05e448a545f70b1e13862fe12fb4f3a95f24fef2b5"
+  },
+  "limitations": [
+    "E5-C17 has been used in prior development; selected metrics are optimistic",
+    "No evaluation on E5-C44 or E5-C45 seeds for selection",
+    "Validity model was trained on signal-selected candidates, but applied to context-selected candidates",
+    "Same synthetic generator, no operational validation",
+    "Do not tune this threshold after inspecting a subsequent held-out test"
+  ]
+}

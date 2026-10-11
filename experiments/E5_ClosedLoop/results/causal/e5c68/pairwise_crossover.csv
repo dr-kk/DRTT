@@ -1,0 +1,4 @@
+policy_a,policy_b,equal_loss_fp_to_fn_ratio,nonnegative_crossover
+E5-C64,E5-C66A,0.05163832434674409,True
+E5-C64,Global,-0.05970149253731343,False
+E5-C66A,Global,0.04176904176904177,True

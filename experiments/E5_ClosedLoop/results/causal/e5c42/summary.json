@@ -1,0 +1,28 @@
+{
+  "experiment": "E5-C42",
+  "scope": "development calibration diagnostic only",
+  "input": "results\\causal\\e5c41\\calibration_predictions.csv",
+  "samples": 2420,
+  "positives": 212,
+  "base_rate": 0.08760330578512397,
+  "mean_predicted_probability": 0.36335855818212287,
+  "calibration_in_the_large_error": 0.2757552523969989,
+  "auroc": 0.8135467938200711,
+  "average_precision": 0.3454716766391662,
+  "log_loss": 0.5152391225841367,
+  "brier_score": 0.172844073993489,
+  "constant_base_rate_brier": 0.07992896660064204,
+  "brier_skill_vs_base_rate": -1.1624710207638365,
+  "ece_10_equal_width": 0.2757552523969989,
+  "mce_10_equal_width": 0.5534384628959073,
+  "at_fixed_0_5": {
+    "tp": 151,
+    "fp": 575,
+    "fn": 61,
+    "tn": 1633,
+    "precision": 0.20798898071625344,
+    "recall": 0.7122641509433962,
+    "f1": 0.32196162046908317
+  },
+  "warning": "This is a previously used development calibration set; metrics are descriptive and not independent validation. ECE is bin-dependent. No model was fitted or threshold optimized."
+}

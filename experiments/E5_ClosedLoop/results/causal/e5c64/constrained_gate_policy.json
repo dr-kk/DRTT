@@ -1,0 +1,76 @@
+{
+  "experiment": "E5-C64",
+  "status": "DEVELOPMENT CALIBRATION ONLY; NOT INDEPENDENT TEST",
+  "selection_seeds": [
+    6400,
+    6401,
+    6402,
+    6403,
+    6404
+  ],
+  "development_check_seeds": [
+    6405,
+    6406,
+    6407,
+    6408,
+    6409
+  ],
+  "scenarios": {
+    "reference": [
+      100,
+      2400,
+      10000
+    ],
+    "background_half": [
+      100,
+      2400,
+      5000
+    ],
+    "background_double": [
+      100,
+      2400,
+      20000
+    ],
+    "campaigns_half": [
+      50,
+      2400,
+      10000
+    ],
+    "campaigns_onehalf": [
+      150,
+      2400,
+      10000
+    ],
+    "duration_half": [
+      100,
+      1200,
+      10000
+    ],
+    "duration_double": [
+      100,
+      4800,
+      10000
+    ]
+  },
+  "density_boundary": 16,
+  "sparse_cutoff": 0.725,
+  "dense_cutoff": 0.75,
+  "original_global_cutoff": 0.7437635536351849,
+  "max_fp_ratio_per_scenario": 1.25,
+  "reference_f1_tolerance": 0.005,
+  "selection_objective": "maximize macro scenario pooled F1 subject to per-scenario FP <= ratio*global FP and reference F1 floor",
+  "selection_feasible_grid_points": 49,
+  "model_sha256": {
+    "baseline_ranker": "fbf6c88e3d8b5871657372bf538cc6f3994fb465256020c6a90317d56b059baa",
+    "proposed_ranker": "c0dacf1f5821070bfff90f01850036acc9e6662f11ee2098893aa61ca36aca0f",
+    "original_gate": "17149ce6706c0a572e4cea3488c1ca3144f657f717fcfb8358a6acac26b4d5b8",
+    "compatible_gate": "31218c481a0caa60267ffa995b053e81aa95adc4a42a91df60c6c257ac7e2e05"
+  },
+  "limitations": [
+    "Safety means relative synthetic false-attribution count, not verified operational safety",
+    "Development-check constraints may fail even if selection constraints hold",
+    "E5-C63 findings motivated this hypothesis; E5-C63 is not a valid independent test of E5-C64",
+    "A new untouched independent evaluation is required after policy freeze",
+    "All scenarios use same synthetic generator family; no real-world evidence"
+  ]
+}
